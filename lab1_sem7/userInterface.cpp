@@ -5,59 +5,19 @@
 
 using namespace std;
 
-// проверка на ввод числа и выбор числа
-
-int MenuInputCheck() { // Проверка ручного ввода. Позволяет вводить только числа
-  int correctValue = 0;
-  cin >> correctValue;
-  std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
-  while (cin.fail()) {
-    cin.clear();
-    cout << "Ввод некорректен, попробуйте снова: ";
-    std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin >> correctValue;
-    std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
-  };
-  return correctValue;
-}
-
-void SaveData(const vector<string>& text, const vector<string>& redacted_text, string line_for_search, int counter) {
-  cout << "Сохранить результат в файл?" << endl;
-  cout << "1 - Да | 2 - Нет" << endl;
-  int choice = InputCheck();
+void MenuInputCheck(int *userChoice, int min, int max) { // Проверка ручного ввода. Позволяет вводить только числа
   bool choiceIsCorrect = false;
   while (choiceIsCorrect == false) {
-    if (choice >= Yes && choice <= No) {
+    if ((cin >> *userChoice).good() && *userChoice >= min && *userChoice <= max) {
       choiceIsCorrect = true;
     }
     else {
       cerr << "Введено неправильное значение, попробуйте снова: ";
-      choice = InputCheck();
+      MenuInputCheck(userChoice, min, max);
     }
-  }
-  switch (choice) {
-  case Yes: { /*File_Output_With_Result(text, redacted_text, stats, line_for_search, counter);*/ break; }
-  case No: { break; }
-  }
-  cout << endl;
-  cout << "Сохранить исходные данные в файл?" << endl;
-  cout << "1 - Да | 2 - Нет" << endl;
-  choice = InputCheck();
-  choiceIsCorrect = false;
-  while (choiceIsCorrect == false) {
-    if (choice >= Yes && choice <= No) {
-      choiceIsCorrect = true;
-    }
-    else {
-      cerr << "Введено неправильное значение, попробуйте снова: ";
-      choice = InputCheck();
-    }
-  }
-  switch (choice) {
-  case Yes: { SaveInitialData(text); break; }
-  case No: { break; }
   }
 }
+
 
 void Greeting() { // Приветсвие
   //cout << "Эта программа копирует строки, " << endl;
@@ -107,29 +67,55 @@ void ManualInput(vector<string> text, char* searchSymbol) {
   cin >> searchSymbol;
 }
 
+//void Save_Data(const vector<string>& text, const vector<string>& redacted_text, amount_in_text stats, string line_for_search, int counter) {
+//  cout << "Сохранить результат в файл?" << endl;
+//  cout << "1 - Да | 2 - Нет" << endl;
+//  int choice = Input_Check();
+//  bool choice_is_correct = false;
+//  while (choice_is_correct == false) {
+//    if (choice >= Yes && choice <= No) {
+//      choice_is_correct = true;
+//    }
+//    else {
+//      cerr << "Введено неправильное значение, попробуйте снова: ";
+//      choice = Input_Check();
+//    }
+//  }
+//  switch (choice) {
+//  case Yes: { File_Output_With_Result(text, redacted_text, stats, line_for_search, counter); break; }
+//  case No: { break; }
+//  }
+//  cout << endl;
+//  cout << "Сохранить исходные данные в файл?" << endl;
+//  cout << "1 - Да | 2 - Нет" << endl;
+//  choice = Input_Check();
+//  choice_is_correct = false;
+//  while (choice_is_correct == false) {
+//    if (choice >= Yes && choice <= No) {
+//      choice_is_correct = true;
+//    }
+//    else {
+//      cerr << "Введено неправильное значение, попробуйте снова: ";
+//      choice = Input_Check();
+//    }
+//  }
+//  switch (choice) {
+//  case Yes: { File_Output_Initial_Data(text); break; }
+//  case No: { break; }
+//  }
+//}
 
 void Menu() { // Главное меню
-  int variant;
-  //amount_in_text stats = {};
+  int userChoice;
   vector<string> text;
   vector<string> wordsWithSearchSymbol;
   char searchSymbol;
-  int counter = 0;
-  PrintMenu();
-  variant = MenuInputCheck();
 
-  bool variant_is_correct = false;
-  while (variant_is_correct == false) {
-    if (variant >= ManualInputMenuItem && variant <= ExitMenuItem) {
-      variant_is_correct = true;
-    }
-    else {
-      cerr << "Введено неправильное значение, попробуйте снова: ";
-      variant = InputCheck();
-    }
-  }
+  PrintMenu();
+  MenuInputCheck(&userChoice, ManualInputMenuItem, ExitMenuItem);
+
   cout << endl;
-  switch (variant) {
+  switch (userChoice) {
   case ManualInputMenuItem: {
     ManualInput(text, &searchSymbol);
     break;
@@ -147,6 +133,6 @@ void Menu() { // Главное меню
     break; }
   case ShowInfoMenuItem: {Greeting(); Menu(); break; }
   //case UnitTestMenuItem: {Module_Test(); Menu(); break; }
-  case ExitMenuItem: {cout << "Программа завершена. До свидания." << endl; exit(0); }
+  case ExitMenuItem: {cout << "Программа завершена." << endl; exit(0); }
   }
 }

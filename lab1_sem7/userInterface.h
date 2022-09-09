@@ -2,14 +2,16 @@
 #include <vector>
 #include <string>
 
+void MenuInputCheck(int* userChoice, int min, int max);
+
 void Greeting();
 
-int InputCheck();
+void PrintMenu();
 
 void Menu();
 
-void SaveData(const std::vector<std::string>& text, const std::vector<std::string>& redacted_text, std::string line_for_search, int counter);
+void ManualInput(vector<string> text, char* searchSymbol);
 
 enum Menu { ManualInputMenuItem = 1, InputFromFileMenuItem, ShowInfoMenuItem, UnitTestMenuItem, ExitMenuItem };
 
-enum Save_Answer { Yes = 1, No };
+enum SaveAnswer { Yes = 1, No };
