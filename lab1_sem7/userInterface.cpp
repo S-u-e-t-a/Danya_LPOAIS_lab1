@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void MenuInputCheck(int *userChoice, int min, int max) { // Проверка ручного ввода. Позволяет вводить только числа
+void MenuInputCheck(int* userChoice, int min, int max) { // Проверка ручного ввода. Позволяет вводить только числа
   bool choiceIsCorrect = false;
   while (choiceIsCorrect == false) {
     if ((cin >> *userChoice).good() && *userChoice >= min && *userChoice <= max) {
@@ -17,7 +17,6 @@ void MenuInputCheck(int *userChoice, int min, int max) { // Проверка ручного вво
     }
   }
 }
-
 
 void Greeting() { // Приветсвие
   //cout << "Эта программа копирует строки, " << endl;
@@ -41,6 +40,16 @@ void PrintMenu() {
   cout << "5. Выйти из программы." << endl;
   cout << endl;
   cout << "Выберите пункт меню: ";
+}
+
+void PrintSaveMenu(int saveContext) {
+  switch (saveContext) {
+  case SaveResultContext: {   cout << "Сохранить результат в файл?" << endl; break; }
+  case SaveInitialDataContext: {   cout << "Сохранить исходные данные в файл?" << endl; break; }
+  }
+  cout << "1 - Да | 2 - Нет" << endl;
+  cout << endl;
+  cout << "Выбор: ";
 }
 
 void ManualInput(vector<string> text, char* searchSymbol) {
@@ -67,43 +76,22 @@ void ManualInput(vector<string> text, char* searchSymbol) {
   cin >> searchSymbol;
 }
 
-//void Save_Data(const vector<string>& text, const vector<string>& redacted_text, amount_in_text stats, string line_for_search, int counter) {
-//  cout << "Сохранить результат в файл?" << endl;
-//  cout << "1 - Да | 2 - Нет" << endl;
-//  int choice = Input_Check();
-//  bool choice_is_correct = false;
-//  while (choice_is_correct == false) {
-//    if (choice >= Yes && choice <= No) {
-//      choice_is_correct = true;
-//    }
-//    else {
-//      cerr << "Введено неправильное значение, попробуйте снова: ";
-//      choice = Input_Check();
-//    }
-//  }
-//  switch (choice) {
-//  case Yes: { File_Output_With_Result(text, redacted_text, stats, line_for_search, counter); break; }
-//  case No: { break; }
-//  }
-//  cout << endl;
-//  cout << "Сохранить исходные данные в файл?" << endl;
-//  cout << "1 - Да | 2 - Нет" << endl;
-//  choice = Input_Check();
-//  choice_is_correct = false;
-//  while (choice_is_correct == false) {
-//    if (choice >= Yes && choice <= No) {
-//      choice_is_correct = true;
-//    }
-//    else {
-//      cerr << "Введено неправильное значение, попробуйте снова: ";
-//      choice = Input_Check();
-//    }
-//  }
-//  switch (choice) {
-//  case Yes: { File_Output_Initial_Data(text); break; }
-//  case No: { break; }
-//  }
-//}
+void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string searchSymbol) {
+  int userChoice;
+  PrintSaveMenu(SaveResultContext);
+  MenuInputCheck(&userChoice, Yes, No);
+  switch (userChoice) {
+  case Yes: { SaveResult(text, wordsWithSearchSymbol, searchSymbol); break; }
+  case No: { break; }
+  }
+  //cout << endl;
+  PrintSaveMenu(SaveInitialDataContext);
+  MenuInputCheck(&userChoice, Yes, No);
+  switch (userChoice) {
+  case Yes: { SaveInitialData(text); break; }
+  case No: { break; }
+  }
+}
 
 void Menu() { // Главное меню
   int userChoice;
@@ -132,7 +120,7 @@ void Menu() { // Главное меню
     cout << endl;
     break; }
   case ShowInfoMenuItem: {Greeting(); Menu(); break; }
-  //case UnitTestMenuItem: {Module_Test(); Menu(); break; }
+                       //case UnitTestMenuItem: {Module_Test(); Menu(); break; }
   case ExitMenuItem: {cout << "Программа завершена." << endl; exit(0); }
   }
 }

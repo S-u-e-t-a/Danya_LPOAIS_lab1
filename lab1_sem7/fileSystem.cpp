@@ -39,7 +39,7 @@ void PrintAdditionalMenu() { // Вспомогательное меню, если в ходе сохранения фай
   cout << "3. Назад." << endl;
 }
 
-void PrintResult(const vector<string>& text, const vector<string>& redacted_text, string line_for_search, string path) { // Вспомогательная функция для записи данных в файл
+void PrintResult(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string searchSymbol, string path) { // Вспомогательная функция для записи данных в файл
   ofstream fout(path);
   fout << "Исходный текст: " << endl;
   fout << endl;
@@ -47,11 +47,11 @@ void PrintResult(const vector<string>& text, const vector<string>& redacted_text
     fout << text[i] << endl;
   }
   fout << endl;
-  if (text != redacted_text) {
+  if (text != wordsWithSearchSymbol) {
     fout << "Текст после редактирования: " << endl;
     fout << endl;
-    for (int i = 0; i < redacted_text.size(); i++) {
-      fout << redacted_text[i] << endl;
+    for (int i = 0; i < wordsWithSearchSymbol.size(); i++) {
+      fout << wordsWithSearchSymbol[i] << endl;
     }
     fout << endl;
   }

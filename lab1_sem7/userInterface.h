@@ -12,6 +12,11 @@ void Menu();
 
 void ManualInput(vector<string> text, char* searchSymbol);
 
+void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string searchSymbol);
+
 enum Menu { ManualInputMenuItem = 1, InputFromFileMenuItem, ShowInfoMenuItem, UnitTestMenuItem, ExitMenuItem };
 
 enum SaveAnswer { Yes = 1, No };
+
+enum SaveContext { SaveResultContext = 1, SaveInitialDataContext
+};
