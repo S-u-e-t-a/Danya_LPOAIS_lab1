@@ -1,6 +1,7 @@
 #include "fileSystem.h"
 #include "textFunctions.h"
 #include "userInterface.h"
+#include "exceptions.h"
 //#include "module_test.h"
 
 using namespace std;
@@ -12,6 +13,14 @@ void MenuInputCheck(int* userChoice, int min, int max) { // Проверка ручного вво
       choiceIsCorrect = true;
     }
     else {
+      throw WrongChoiceException("Введено неправильное значение.\n", *userChoice);
+
+      //catch (WrongChoiceException &ex) // в try catch засунусть
+      //{
+      //  cout << "Ошибка: " << ex.what() << endl;
+      //  cout << "Значение ввода: " << ex.GetDataState() << endl;
+      //}
+
       cerr << "Введено неправильное значение, попробуйте снова: ";
       MenuInputCheck(userChoice, min, max);
     }
