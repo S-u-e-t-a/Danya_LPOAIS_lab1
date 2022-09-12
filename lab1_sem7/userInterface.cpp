@@ -45,7 +45,7 @@ void PrintMenu() {
   cout << "Выберите пункт меню: ";
 }
 
-void PrintYesNoMenu(string& msg) {
+void PrintYesNoMenu(string msg) {
   cout << msg << endl;
   cout << "1 - Да | 2 - Нет" << endl;
   cout << endl;
