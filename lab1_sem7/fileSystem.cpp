@@ -49,7 +49,7 @@ void PrintAdditionalMenu() { // Вспомогательное меню, если в ходе сохранения фай
   cout << "\tЧто вы хотите сделать?" << endl;
   cout << "1. Перезаписать файл." << endl;
   cout << "2. Создать новый файл." << endl;
-  cout << "3. Назад." << endl;
+  cout << "3. Вернуться в главное меню." << endl;
   cout << endl;
   cout << "Выберите пункт меню: ";
 }
@@ -141,7 +141,7 @@ void SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchS
       break;
     }
 
-    case SavingMenuItems::GoBackMenuItem: { // Вариант выйти обратно
+    case GoBackMenuItem: { // Вариант выйти обратно
       PrintMenu();
       break; }
     }

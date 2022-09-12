@@ -26,4 +26,4 @@ void SaveFile(const std::vector<std::string>& text, const std::vector<std::strin
 
 enum SavingMenuItems { RewriteMenuItem = 1, CreateNewFileMenuItem, GoBackMenuItem };
 
-enum ErrorMenuItems { EnterDataAgainMenuItem = 1, GoBackMenuItem };
+enum ErrorMenuItems { EnterDataAgainMenuItem = 1, GoBackToMainMenuMenuItem };

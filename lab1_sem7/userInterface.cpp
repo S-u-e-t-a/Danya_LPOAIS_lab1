@@ -56,7 +56,7 @@ void PrintErrorMenu() { // Вспомогательное меню, если в ходе указания значений п
   system("cls");
   cout << "\tЧто вы хотите сделать?" << endl;
   cout << "1. Ввести данные заново." << endl;
-  cout << "2. Назад." << endl;
+  cout << "2. Вернуться в главное меню." << endl;
   cout << endl;
   cout << "Выберите пункт меню: ";
 }
@@ -155,7 +155,7 @@ void Menu() { // Главное меню
     cout << "Значение ввода: " << ex.GetDataState() << endl;
     cout << endl;
     PrintErrorMenu();
-    MenuInputCheck(&userChoice, EnterDataAgainMenuItem, ErrorMenuItems::GoBackMenuItem);
+    MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
     switch (userChoice) {
     case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
       
@@ -177,7 +177,7 @@ void Menu() { // Главное меню
       }
     }
      break;
-    case ErrorMenuItems::GoBackMenuItem: { // Вариант выйти обратно
+    case GoBackToMainMenuMenuItem: { // Вариант выйти обратно
       PrintMenu();
       break; }
     }
@@ -186,12 +186,12 @@ void Menu() { // Главное меню
   {
     cerr << "Ошибка: " << ex.what() << endl;
     PrintErrorMenu();
-    MenuInputCheck(&userChoice, EnterDataAgainMenuItem, ErrorMenuItems::GoBackMenuItem);
+    MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
     switch (userChoice) {
     case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
       SaveFile(text, wordsWithSearchSymbol, searchSymbol, ex.GetContext());
       break; }
-    case ErrorMenuItems::GoBackMenuItem: { // Вариант выйти обратно
+    case GoBackToMainMenuMenuItem: { // Вариант выйти обратно
       PrintMenu();
       break; }
     }
