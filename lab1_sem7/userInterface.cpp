@@ -13,21 +13,14 @@ void MenuInputCheck(int* userChoice, int min, int max) { // Проверка ручного вво
       choiceIsCorrect = true;
     }
     else {
-      throw WrongChoiceException("Введено неправильное значение.\n", *userChoice);
-
-      //catch (WrongChoiceException &ex) // в try catch засунусть
-      //{
-      //  cout << "Ошибка: " << ex.what() << endl;
-      //  cout << "Значение ввода: " << ex.GetDataState() << endl;
-      //}
-
-      cerr << "Введено неправильное значение, попробуйте снова: ";
-      MenuInputCheck(userChoice, min, max);
+      throw WrongChoiceException("Введено неправильное значение.", userChoice, min, max);
+      //MenuInputCheck(userChoice, min, max);
     }
   }
 }
 
 void Greeting() { // Приветсвие
+  system("cls");
   //cout << "Эта программа копирует строки, " << endl;
   //cout << "подсчитывает количество символов, слов, строк, абзацев в тексте." << endl;
   //cout << "Производит поиск заданной подстроки в тексте и подсчитывает число вхождений." << endl;
@@ -40,7 +33,8 @@ void Greeting() { // Приветсвие
 }
 
 void PrintMenu() {
-  cout << "\tMENU" << endl;
+  system("cls");
+  cout << "\tГЛАВНОЕ МЕНЮ" << endl;
   cout << "Выберите вариант:" << endl;
   cout << "1. Ввести текст вручную." << endl;
   cout << "2. Вывести текст из файла." << endl;
@@ -51,11 +45,8 @@ void PrintMenu() {
   cout << "Выберите пункт меню: ";
 }
 
-void PrintSaveMenu(int saveContext) {
-  switch (saveContext) {
-  case SaveResultContext: {   cout << "Сохранить результат в файл?" << endl; break; }
-  case SaveInitialDataContext: {   cout << "Сохранить исходные данные в файл?" << endl; break; }
-  }
+void PrintSaveMenu(string msg) {
+  cout << msg << endl;
   cout << "1 - Да | 2 - Нет" << endl;
   cout << endl;
   cout << "Выбор: ";
@@ -63,6 +54,7 @@ void PrintSaveMenu(int saveContext) {
 
 void ManualInput(vector<string> text, char* searchSymbol) {
   string buffer;
+  system("cls");
   cout << "Введите текст." << endl;
   cout << "По окончании ввода введите пустую строку." << endl;
   cout << endl;
@@ -87,17 +79,17 @@ void ManualInput(vector<string> text, char* searchSymbol) {
 
 void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string searchSymbol) {
   int userChoice;
-  PrintSaveMenu(SaveResultContext);
+  PrintSaveMenu("Сохранить результат в файл?");
   MenuInputCheck(&userChoice, Yes, No);
   switch (userChoice) {
-  case Yes: { SaveResult(text, wordsWithSearchSymbol, searchSymbol); break; }
+  case Yes: { SaveFile(text, wordsWithSearchSymbol, searchSymbol, ); break; }
   case No: { break; }
   }
   //cout << endl;
-  PrintSaveMenu(SaveInitialDataContext);
+  PrintSaveMenu("Сохранить исходные данные в файл?");
   MenuInputCheck(&userChoice, Yes, No);
   switch (userChoice) {
-  case Yes: { SaveInitialData(text); break; }
+  case Yes: { SaveFile(text); break; }
   case No: { break; }
   }
 }
@@ -107,29 +99,54 @@ void Menu() { // Главное меню
   vector<string> text;
   vector<string> wordsWithSearchSymbol;
   char searchSymbol;
-
-  PrintMenu();
-  MenuInputCheck(&userChoice, ManualInputMenuItem, ExitMenuItem);
-
-  cout << endl;
-  switch (userChoice) {
-  case ManualInputMenuItem: {
-    ManualInput(text, &searchSymbol);
-    break;
-  }
-  case InputFromFileMenuItem: {
-    text = FileInput(text);
-    cout << "Ваш текст:" << endl;
+  try {
+    PrintMenu();
+    MenuInputCheck(&userChoice, ManualInputMenuItem, ExitMenuItem);
     cout << endl;
-    for (int i = 0; i < text.size(); i++) {
-      cout << text[i] << endl;
+    switch (userChoice) {
+    case ManualInputMenuItem: {
+      ManualInput(text, &searchSymbol);
+      break;
     }
-    cout << "Символ поиска: " << searchSymbol;
-    wordsWithSearchSymbol = text;
-    cout << endl;
-    break; }
-  case ShowInfoMenuItem: {Greeting(); Menu(); break; }
-                       //case UnitTestMenuItem: {Module_Test(); Menu(); break; }
-  case ExitMenuItem: {cout << "Программа завершена." << endl; exit(0); }
+    case InputFromFileMenuItem: {
+      FileInput(text);
+      cout << "Ваш текст:" << endl;
+      cout << endl;
+      for (int i = 0; i < text.size(); i++) {
+        cout << text[i] << endl;
+      }
+      cout << "Символ поиска: " << searchSymbol;
+      wordsWithSearchSymbol = text;
+      cout << endl;
+      break; }
+    case ShowInfoMenuItem: {Greeting(); Menu(); break; }
+                         //case UnitTestMenuItem: {Module_Test(); Menu(); break; }
+    case ExitMenuItem: {cout << "Программа завершена." << endl; exit(0); }
+    }
   }
+  catch (WrongChoiceException& ex)
+  {
+    cerr << "Ошибка: " << ex.what() << endl;
+    cout << "Значение ввода: " << *(ex.GetDataState()) << endl;
+    MenuInputCheck(ex.GetDataState(), ex.GetMin(), ex.GetMax());
+  }
+  catch (WrongPathInput& ex)
+  {
+    cerr << "Ошибка: " << ex.what() << endl;
+    cout << "Значение ввода: " << ex.GetDataState() << endl;
+    cout << endl;
+    PrintErrorMenu();
+    MenuInputCheck(&userChoice, EnterDataAgainMenuItem, ErrorMenuItems::GoBackMenuItem);
+    switch (userChoice) {
+    case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
+      FileInput(text);
+      break; }
+    case ErrorMenuItems::GoBackMenuItem: { // Вариант выйти обратно
+      PrintMenu();
+      break; }
+    }
+  }
+
+
+
 }

@@ -8,18 +8,20 @@
 
 void PrintAdditionalMenu();
 
-bool CheckPath(std::string path);
+void CheckPath(std::string path); // ьс void
 
-bool CheckReadOnly(std::string filename);
+void CheckReadOnly(std::string filename); // ьс void
 
 void PrintResult(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string searchSymbol, std::string path);
 
+void PrintErrorMenu();
+
 void PrintInitialData(const std::vector<std::string>& text, std::string path);
 
-std::vector<std::string> FileInput(std::vector<std::string>& text);
+void FileInput(std::vector<std::string>& text);
 
-void SaveResult(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string searchSymbol);
+void SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string searchSymbol, int saveContext);
 
-void SaveInitialData(const std::vector<std::string>& text);
+enum SavingMenuItems { RewriteMenuItem = 1, CreateNewFileMenuItem, GoBackMenuItem };
 
-enum Saving { RewriteMenuItem = 1, CreateNewFileMenuItem, GoBackMenuItem };
+enum ErrorMenuItems { EnterDataAgainMenuItem = 1, GoBackMenuItem };

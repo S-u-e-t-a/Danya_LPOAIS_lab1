@@ -18,6 +18,5 @@ int main() {
 	Greeting();
 	while (true) {
 		Menu();
-		cout << endl;
 	}
 }
