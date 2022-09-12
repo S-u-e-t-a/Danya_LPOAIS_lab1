@@ -21,15 +21,18 @@ void MenuInputCheck(int* userChoice, int min, int max) { // Проверка ручного вво
 
 void Greeting() { // Приветсвие
   system("cls");
-  //cout << "Эта программа копирует строки, " << endl;
-  //cout << "подсчитывает количество символов, слов, строк, абзацев в тексте." << endl;
-  //cout << "Производит поиск заданной подстроки в тексте и подсчитывает число вхождений." << endl;
+  cout << "Лабораторная работа №1" << endl;
+  cout << "Вариант 5" << endl;
+  cout << endl;
+  cout << "Данная программа производит поиск всех слов в тексте, содержащих заданный символ." << endl;
+  cout << "Ввод данных можно осуществить вручную или открыв файл формата .txt." << endl;
+  cout << "В программе реализованы функции сохранения исходных данных и" << endl;
+  cout << "результатов работы программы в файл формата.txt." << endl;
   cout << endl;
   cout << "Автор: Ермаков Даниил" << endl;
   cout << "Группа: 494" << endl;
-  cout << "Лабораторная работа №4" << endl;
-  cout << "Вариант 5" << endl;
   cout << endl;
+  system("pause");
 }
 
 void PrintMenu() {
@@ -77,12 +80,14 @@ void ManualInput(vector<string>& text, string& searchSymbol) {
   cout << "Введите текст." << endl;
   cout << "По окончании ввода введите пустую строку." << endl;
   cout << endl;
+  getline(cin, buffer);
   while (true) {
     getline(cin, buffer);
     if (buffer != "") {
       text.push_back(buffer);
     }
     else {
+
       if (text.size() == 0) {
         cout << "Вы не ввели текст." << endl;
         cout << "Введите текст." << endl;

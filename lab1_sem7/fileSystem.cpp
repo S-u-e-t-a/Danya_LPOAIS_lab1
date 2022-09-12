@@ -37,6 +37,7 @@ void CheckReadOnly(string filename, int context) { // Проверка файла на атрибут 
 void PathInput(string path, int context) {
   system("cls");
   cout << "Введите путь к файлу: ";
+  cin.get();
   getline(cin, path);
   CheckPath(path, context);
   CheckReadOnly(path, context);
@@ -96,7 +97,7 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
   ifstream fin(pathInput);
   fin.seekg(0, ios::beg);
   string temp; // Переменная для временного хранения символов из файла
-  while (!fin.eof()) {
+  while (!fin.eof()) {  // При вводе любой строки зацикливается + создаётся файл с названием строки
     while (getline(fin, temp))
       text.push_back(temp);
   }
