@@ -8,14 +8,18 @@ void Greeting();
 
 void PrintMenu();
 
+void PrintYesNoMenu(std::string msg);
+
+void PrintErrorMenu();
+
 void Menu();
 
-void ManualInput(vector<string> text, char* searchSymbol);
+void ManualInput(std::vector<std::string>& text, std::string& searchSymbol);
 
-void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string searchSymbol);
+void SaveData(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol);
 
 enum Menu { ManualInputMenuItem = 1, InputFromFileMenuItem, ShowInfoMenuItem, UnitTestMenuItem, ExitMenuItem };
 
 enum SaveAnswer { Yes = 1, No };
 
-enum MenuContext { SaveResultContext = 1, SaveInitialDataContext };
+enum Context { SaveResultContext = 1, SaveInitialDataContext, InputContext };

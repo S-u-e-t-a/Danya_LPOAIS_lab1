@@ -31,25 +31,35 @@ private:
 class WrongPathInput : public exception // Исключение для неправильного указания пути или имени файла
 {
 public:
-  WrongPathInput(const char* msg, string dataState) : exception(msg) // Конструктор исключения
+  WrongPathInput(const char* msg, string dataState, int context) : exception(msg) // Конструктор исключения
   {
     this->dataState = dataState;
+    this->context = context;
   }
   string GetDataState()
   {
     return dataState;
   }
+  int GetContext()
+  {
+    return context;
+  }
 private:
   string dataState;
+  int context;
 };
 
 class FileIsReadOnly : public exception // Исключение при сохранении в файл с атрибутом "только для чтения"
 {
 public:
-  FileIsReadOnly(const char* msg) : exception(msg) // Конструктор исключения
+  FileIsReadOnly(const char* msg, int context) : exception(msg) // Конструктор исключения
   {
+    this->context = context;
   }
-}
-
-// https:/iot-embedded.ru/programming_c_and_cpp/cpp-generiruem-svoi-iskljucheniya-svoj-kla/
-// https:/radioprog.ru/post/1302
+  int GetContext()
+  {
+    return context;
+  }
+private:
+  int context;
+};
