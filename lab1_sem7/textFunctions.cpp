@@ -45,7 +45,11 @@ void SplitText(const vector<string>& text, vector<string>& wordsWithSearchSymbol
 }
 
 void FindSymbolInText(vector<string>& wordsWithSearchSymbol, const string& searchSymbol) {
-
+  for (int i = 0; i < wordsWithSearchSymbol.size(); i++) {
+    if (wordsWithSearchSymbol[i].find(searchSymbol) != string::npos) {
+      wordsWithSearchSymbol.erase(wordsWithSearchSymbol.begin() + i);  // мб i - 1
+    }
+  }
 }
 
 
@@ -85,7 +89,7 @@ void Count_Amount_In_Text(const vector<string>& text) {
 }
 
 //Конвертация к строчным буквам
-size_t ConverToLower(string text, string searchSymbol, size_t pos = 0) {
+size_t ConvertToLower(string text, string searchSymbol, size_t pos = 0) {
   transform(text.begin(), text.end(), text.begin(), ::tolower);
   transform(searchSymbol.begin(), searchSymbol.end(), searchSymbol.begin(), ::tolower);
   return text.find(searchSymbol, pos);
@@ -95,10 +99,10 @@ size_t ConverToLower(string text, string searchSymbol, size_t pos = 0) {
 int SearchForString(const vector<string>& text, string line_for_search) {
   int counter = 0;
   for (int i = 0; i < text.size(); i++) {
-    size_t pos = ConverToLower(text[i], line_for_search);
+    size_t pos = ConvertToLower(text[i], line_for_search);
     while (pos != string::npos) {
       counter++;
-      pos = ConverToLower(text[i], line_for_search, pos + line_for_search.size());
+      pos = ConvertToLower(text[i], line_for_search, pos + line_for_search.size());
     }
   }
   return counter;
