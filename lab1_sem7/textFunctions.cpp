@@ -19,8 +19,7 @@ void SplitText(const vector<string>& text, vector<string>& wordsWithSearchSymbol
   vector<char> separators = { ' ', '.', ',', '!', '?', '\t', '|', '\\', '@', '"', '#', '$', '%', ':', '*', '(', ')', '[', ']', '-', '_', '+', '=', '{', '}', '/', ';', '<', '>'};
   for (int i = 0; i < text.size(); i++) {
     int j = 0;
-    if (text[i].empty())
-    {
+    if (text[i].empty()) {
       continue;
     }
     while (text[i][j] != '\0') {
@@ -49,6 +48,7 @@ void SplitText(const vector<string>& text, vector<string>& wordsWithSearchSymbol
       }
       j++;
     }
+    remove(wordsWithSearchSymbol.begin(), wordsWithSearchSymbol.end(), "");
     //for (int j = 0; j < text[i].length(); j++)
     //{
     //  if (text[i][j] == ' ' ) {
@@ -65,14 +65,16 @@ void SplitText(const vector<string>& text, vector<string>& wordsWithSearchSymbol
 }
 
 void FindSymbolInText(vector<string>& wordsWithSearchSymbol, string searchSymbol) {
+  // создать временный вектор и в него записывать результат
   for (int i = 0; i < wordsWithSearchSymbol.size(); i++) {
     string tempWord = wordsWithSearchSymbol[i];
     transform(tempWord.begin(), tempWord.end(), tempWord.begin(), ::tolower);
     transform(searchSymbol.begin(), searchSymbol.end(), searchSymbol.begin(), ::tolower);
-    if (tempWord.find(searchSymbol) != string::npos) {
-      wordsWithSearchSymbol.erase(wordsWithSearchSymbol.begin() + i);  // мб i - 1
+    if (!(tempWord.find(searchSymbol) != string::npos)) { // если не нашёл. убрать ! если хочу добавлять в новый вектор
+      remove(wordsWithSearchSymbol.begin(), wordsWithSearchSymbol.end(), tempWord);
     }
   }
+  remove(wordsWithSearchSymbol.begin(), wordsWithSearchSymbol.end(), "");
 }
 
 //Подсчёт количества символов, слов, строк, абзацев в тексте

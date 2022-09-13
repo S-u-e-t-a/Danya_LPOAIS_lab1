@@ -83,7 +83,7 @@ void PrintResult(const vector<string>& wordsWithSearchSymbol) {
   cout << endl;
 }
 
-void ManualInput(vector<string>& text, string& searchSymbol) {
+void ManualInput(vector<string>& text, string& searchSymbol) { // мб сюда исключение
   string buffer;
   system("cls");
   cout << "Введите текст." << endl;
@@ -96,7 +96,6 @@ void ManualInput(vector<string>& text, string& searchSymbol) {
       text.push_back(buffer);
     }
     else {
-
       if (text.size() == 0) {
         cout << "Вы не ввели текст." << endl;
         cout << "Введите текст." << endl;
@@ -160,12 +159,14 @@ void Menu() { // Главное меню
   }
   catch (WrongChoiceException& ex)
   {
+    cout << endl;
     cerr << "Ошибка: " << ex.what() << endl;
-    cout << "Значение ввода: " << *(ex.GetDataState()) << endl;
+    cout << "Значение ввода: " << *(ex.GetDataState()) << endl; // Если ввести букву, то тут выведет 0
     MenuInputCheck(ex.GetDataState(), ex.GetMin(), ex.GetMax());
   }
   catch (WrongPathInput& ex)
   {
+    cout << endl;
     cerr << "Ошибка: " << ex.what() << endl;
     cout << "Значение ввода: " << ex.GetDataState() << endl;
     cout << endl;
@@ -200,6 +201,7 @@ void Menu() { // Главное меню
   }
   catch (FileIsReadOnly& ex)
   {
+    cout << endl;
     cerr << "Ошибка: " << ex.what() << endl;
     PrintErrorMenu();
     MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
