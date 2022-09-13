@@ -3,10 +3,10 @@
 #include <string>
 #include <algorithm>
 
-size_t ConvertToLower(std::string text, std::string line_for_search, size_t pos);
+void SplitText(const std::vector<std::string>& text, std::vector<std::string>& wordsWithSearchSymbol);
 
-int SearchForString(const std::vector<std::string>& text, std::string string_for_copy);
+size_t ConverToLower(std::string text, const std::string& searchSymbol, size_t pos);
 
-std::vector<std::string> CopyString(std::vector<std::string>& text, int number_of_string_for_copy, int number_of_string);
+void FindSymbolInText(std::vector<std::string>& wordsWithSearchSymbol, const std::string& searchSymbol);
 
 enum Symbol { Number = 1, Separator, Word };
