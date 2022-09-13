@@ -48,7 +48,7 @@ void PrintMenu() {
   cout << "Выберите пункт меню: ";
 }
 
-void PrintYesNoMenu(string msg) {
+void PrintYesNoMenu(const string msg) {
   cout << msg << endl;
   cout << "1 - Да | 2 - Нет" << endl;
   cout << endl;
@@ -64,13 +64,22 @@ void PrintErrorMenu() { // Вспомогательное меню, если в ходе указания значений п
   cout << "Выберите пункт меню: ";
 }
 
-void PrintTextFromFile(vector<string>& text, string& searchSymbol) {
+void PrintText(const vector<string>& text, const string& searchSymbol) {
   cout << "Ваш текст:" << endl;
   cout << endl;
   for (int i = 0; i < text.size(); i++) {
     cout << text[i] << endl;
   }
   cout << "Символ поиска: " << searchSymbol;
+  cout << endl;
+}
+
+void PrintResult(const vector<string>& wordsWithSearchSymbol) {
+  cout << "Результат поиска:" << endl;
+  cout << endl;
+  for (int i = 0; i < wordsWithSearchSymbol.size(); i++) {
+    cout << wordsWithSearchSymbol[i] << endl;
+  }
   cout << endl;
 }
 
@@ -109,7 +118,7 @@ void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchS
   case Yes: { SaveFile(text, wordsWithSearchSymbol, searchSymbol, SaveResultContext); break; }
   case No: { break; }
   }
-  //cout << endl;
+  cout << endl;
   PrintYesNoMenu("Сохранить исходные данные в файл?");
   MenuInputCheck(&userChoice, Yes, No);
   switch (userChoice) {
@@ -130,18 +139,19 @@ void Menu() { // Главное меню
     switch (userChoice) {
     case ManualInputMenuItem: {
       ManualInput(text, searchSymbol);
-      // Вызов метода для поиска, а в нём SaveData
+      SplitText(text, wordsWithSearchSymbol);
+      FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
+      PrintResult(wordsWithSearchSymbol);
+      SaveData(text, wordsWithSearchSymbol, searchSymbol);
       break;
     }
     case InputFromFileMenuItem: {
-      // УЗНАТЬ КАК ВЕРНУТЬ СТРОКУ С СИМВОЛОМ ЧЕРЕЗ УКАЗАТЕЛЬ
       FileInput(text, searchSymbol);
-      PrintTextFromFile(text, searchSymbol);
-      wordsWithSearchSymbol = text;
-      
-      // Вызов метода для поиска, а в нём SaveData
-
-
+      PrintText(text, searchSymbol);
+      SplitText(text, wordsWithSearchSymbol);
+      FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
+      PrintResult(wordsWithSearchSymbol);
+      SaveData(text, wordsWithSearchSymbol, searchSymbol);
       break; }
     case ShowInfoMenuItem: {Greeting(); Menu(); break; }
                          //case UnitTestMenuItem: {Module_Test(); Menu(); break; }
@@ -174,15 +184,16 @@ void Menu() { // Главное меню
         break; }
       case InputContext: {
         FileInput(text, searchSymbol);
-        PrintTextFromFile(text, searchSymbol);
-        wordsWithSearchSymbol = text;
-        cout << endl;
-        // Вызов метода для поиска, а в нём SaveData
+        PrintText(text, searchSymbol);
+        SplitText(text, wordsWithSearchSymbol);
+        FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
+        PrintResult(wordsWithSearchSymbol);
+        SaveData(text, wordsWithSearchSymbol, searchSymbol);
         break; }
       }
     }
      break;
-    case GoBackToMainMenuMenuItem: { // Вариант выйти обратно
+    case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
       PrintMenu();
       break; }
     }
@@ -196,7 +207,7 @@ void Menu() { // Главное меню
     case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
       SaveFile(text, wordsWithSearchSymbol, searchSymbol, ex.GetContext());
       break; }
-    case GoBackToMainMenuMenuItem: { // Вариант выйти обратно
+    case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
       PrintMenu();
       break; }
     }

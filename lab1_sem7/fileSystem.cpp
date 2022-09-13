@@ -86,18 +86,21 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
   text.clear();
   string pathInput;
   PathInput(pathInput, InputContext);
+  
   //system("cls");
   //cout << "Введите путь к файлу: ";
   //getline(cin, pathInput);
   //CheckPath(pathInput);
 
-  // СЧИТАТЬ searchSymbol
-
-
   ifstream fin(pathInput);
   fin.seekg(0, ios::beg);
   string temp; // Переменная для временного хранения символов из файла
+  int count = 0;
   while (!fin.eof()) {  // При вводе любой строки зацикливается + создаётся файл с названием строки
+    if (count == 0) {
+      fin >> searchSymbol;
+      count++;
+    }
     while (getline(fin, temp))
       text.push_back(temp);
   }
@@ -105,7 +108,6 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
 }
 
 void SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol, int saveContext) { // Функция для создания файлов с результатами или исоходными данными
-  
   //system("cls");
   //cout << "Введите путь к файлу: ";
   //getline(cin, pathInput);
@@ -141,8 +143,7 @@ void SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchS
       SaveFile(text, wordsWithSearchSymbol, searchSymbol, saveContext);
       break;
     }
-
-    case GoBackMenuItem: { // Вариант выйти обратно
+    case GoBackMenuItem: { // Вариант выйти в главное меню
       PrintMenu();
       break; }
     }

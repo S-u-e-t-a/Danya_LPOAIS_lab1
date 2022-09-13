@@ -8,9 +8,13 @@ void Greeting();
 
 void PrintMenu();
 
-void PrintYesNoMenu(std::string msg);
+void PrintYesNoMenu(const std::string msg);
 
 void PrintErrorMenu();
+
+void PrintText(const std::vector<std::string>& text, const std::string& searchSymbol);
+
+void PrintResult(const std::vector<std::string>& wordsWithSearchSymbol);
 
 void Menu();
 
