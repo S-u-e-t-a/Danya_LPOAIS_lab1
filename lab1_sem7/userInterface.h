@@ -26,4 +26,4 @@ enum Menu { ManualInputMenuItem = 1, InputFromFileMenuItem, ShowInfoMenuItem, Un
 
 enum SaveAnswer { Yes = 1, No };
 
-enum Context { SaveResultContext = 1, SaveInitialDataContext, InputContext };
+enum Context { SaveResultContext = 1, SaveInitialDataContext };
