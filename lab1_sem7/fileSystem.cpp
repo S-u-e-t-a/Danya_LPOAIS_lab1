@@ -27,15 +27,15 @@ bool IsPathGood(string path) { // Проверка пути
   //}
   //file.close();
   if (_strcmpi(basefilenameChar, "con")) return false;
-  //if (is_regular_file(filename)) return false;
+  if (is_regular_file(path)) return false;
   file.close();
   return true;
 }
 
-bool IsReadOnly(string filename) { // Проверка файла на атрибут "только для чтения"
-  ifstream file(filename);
+bool IsReadOnly(string path) { // Проверка файла на атрибут "только для чтения"
+  ofstream file(path);
   WIN32_FIND_DATAA findData;
-  LPCSTR name = filename.c_str();
+  LPCSTR name = path.c_str();
   FindFirstFileA(name, &findData);
   if (findData.dwFileAttributes & FILE_ATTRIBUTE_READONLY) {
     //throw FileIsReadOnly("Невозможно сохранить данные в файл, предназначенный только для чтения.", context);
@@ -131,7 +131,7 @@ void PrintInitialData(const vector<string>& text, string& path) { // Функция для
 
 void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтения данных из файла
   text.clear();
-  string pathInput;
+  string pathInput = "";
   PathInput(pathInput);
   //system("cls");
   //cout << "Введите путь к файлу: ";
