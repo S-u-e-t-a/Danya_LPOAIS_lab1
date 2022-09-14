@@ -22,7 +22,6 @@ bool IsPathGood(string path) { // Проверка пути
   //  throw WrongPathInput("Некорректное указание пути или имени файла.", filename);
   //}
   //file.close();
-
   if (_strcmpi(basefilenameChar, "con")) return false;
   //if (is_regular_file(filename)) return false;
   file.close();
@@ -131,7 +130,6 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
   text.clear();
   string pathInput;
   PathInput(pathInput);
-
   //system("cls");
   //cout << "Введите путь к файлу: ";
   //getline(cin, pathInput);

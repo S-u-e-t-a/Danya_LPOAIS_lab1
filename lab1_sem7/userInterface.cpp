@@ -21,18 +21,18 @@ void MenuInputCheck(int* userChoice, int min, int max) { // Проверка ручного вво
   //    MenuInputCheck(userChoice, min, max);
   //  }
   //}
-  cin.ignore(numeric_limits<streamsize>::max(), '\n');
-  while (cin.fail()) {
-    if (*userChoice >= min && *userChoice <= max) {
-      cin.clear();
-      cerr << "Введено неправильное значение.";
-      cout << endl;
-      cout << "Введите значение: ";
-      cin.ignore(numeric_limits<streamsize>::max(), '\n');
-      cin >> *userChoice;
-      cin.ignore(numeric_limits<streamsize>::max(), '\n');
-      MenuInputCheck(userChoice, min, max);
-    }
+  //cin.ignore(numeric_limits<streamsize>::max(), '\n');
+  cin >> *userChoice;
+  while (cin.fail() || *userChoice >= min && *userChoice <= max) {
+    cin.clear();
+    cout << endl;
+    cerr << "Введено неправильное значение.";
+    cout << endl;
+    cout << "Введите значение: ";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin >> *userChoice;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    MenuInputCheck(userChoice, min, max);
   }
 }
 
@@ -193,7 +193,7 @@ void Menu() { // Главное меню
     MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
     switch (userChoice) {
     case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
-      
+
       // ПОПРОБОВАТЬ НАЙТИ СПОСОБ ПРОСТО УЗНАТЬ ОТКУДА ПРИШЛО ИСКЛЮЧЕНИЕ ( ТОГДА НАДО УБРАТЬ ФУНКЦИЮ PathInput)
       switch (ex.GetContext()) { // Вызов метода, в котором произошло исключение
       case SaveResultContext: {
@@ -212,7 +212,7 @@ void Menu() { // Главное меню
         break; }
       }
     }
-     break;
+                               break;
     case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
       PrintMenu();
       break; }
