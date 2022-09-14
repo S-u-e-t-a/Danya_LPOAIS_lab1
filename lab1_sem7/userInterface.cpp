@@ -130,81 +130,28 @@ void Menu() { // Главное меню
   vector<string> text;
   vector<string> wordsWithSearchSymbol;
   string searchSymbol;
-  try {
-    PrintMenu();
-    MenuInputCheck(&userChoice, ManualInputMenuItem, ExitMenuItem);
-    cout << endl;
-    switch (userChoice) {
-    case ManualInputMenuItem: {
-      ManualInput(text, searchSymbol);
-      SplitText(text, wordsWithSearchSymbol);
-      FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
-      PrintResult(wordsWithSearchSymbol);
-      SaveData(text, wordsWithSearchSymbol, searchSymbol);
-      break;
-    }
-    case InputFromFileMenuItem: {
-      FileInput(text, searchSymbol);
-      PrintText(text, searchSymbol);
-      SplitText(text, wordsWithSearchSymbol);
-      FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
-      PrintResult(wordsWithSearchSymbol);
-      SaveData(text, wordsWithSearchSymbol, searchSymbol);
-      break; }
-    case ShowInfoMenuItem: {Greeting(); Menu(); break; }
-                         //case UnitTestMenuItem: {Module_Test(); Menu(); break; }
-    case ExitMenuItem: {cout << "Программа завершена." << endl; exit(0); }
-    }
+  PrintMenu();
+  MenuInputCheck(&userChoice, ManualInputMenuItem, ExitMenuItem);
+  cout << endl;
+  switch (userChoice) {
+  case ManualInputMenuItem: {
+    ManualInput(text, searchSymbol);
+    SplitText(text, wordsWithSearchSymbol);
+    FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
+    PrintResult(wordsWithSearchSymbol);
+    SaveData(text, wordsWithSearchSymbol, searchSymbol);
+    break;
   }
-  catch (WrongPathInput& ex)
-  {
-    cout << endl;
-    cerr << "Ошибка: " << ex.what() << endl;
-    cout << "Значение ввода: " << ex.GetDataState() << endl;
-    cout << endl;
-    PrintErrorMenu();
-    MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
-    switch (userChoice) {
-    case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
-
-      // ПОПРОБОВАТЬ НАЙТИ СПОСОБ ПРОСТО УЗНАТЬ ОТКУДА ПРИШЛО ИСКЛЮЧЕНИЕ ( ТОГДА НАДО УБРАТЬ ФУНКЦИЮ PathInput)
-      switch (ex.GetContext()) { // Вызов метода, в котором произошло исключение
-      case SaveResultContext: {
-        SaveFile(text, wordsWithSearchSymbol, searchSymbol, ex.GetContext());
-        break; }
-      case SaveInitialDataContext: {
-        SaveFile(text, wordsWithSearchSymbol, searchSymbol, ex.GetContext());
-        break; }
-      case InputContext: {
-        FileInput(text, searchSymbol);
-        PrintText(text, searchSymbol);
-        SplitText(text, wordsWithSearchSymbol);
-        FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
-        PrintResult(wordsWithSearchSymbol);
-        SaveData(text, wordsWithSearchSymbol, searchSymbol);
-        break; }
-      }
-    }
-                               break;
-    case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
-      PrintMenu();
-      break; }
-    }
-  }
-  catch (FileIsReadOnly& ex)
-  {
-    cout << endl;
-    //cerr << "Ошибка: " << ex.what() << endl;
-    cerr << "Невозможно сохранить данные в файл, предназначенный только для чтения." << endl;
-    PrintErrorMenu();
-    MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
-    switch (userChoice) {
-    case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
-      SaveFile(text, wordsWithSearchSymbol, searchSymbol, ex.GetContext());
-      break; }
-    case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
-      PrintMenu();
-      break; }
-    }
+  case InputFromFileMenuItem: {
+    FileInput(text, searchSymbol);
+    PrintText(text, searchSymbol);
+    SplitText(text, wordsWithSearchSymbol);
+    FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
+    PrintResult(wordsWithSearchSymbol);
+    SaveData(text, wordsWithSearchSymbol, searchSymbol);
+    break; }
+  case ShowInfoMenuItem: {Greeting(); Menu(); break; }
+                       //case UnitTestMenuItem: {Module_Test(); Menu(); break; }
+  case ExitMenuItem: {cout << "Программа завершена." << endl; exit(0); }
   }
 }

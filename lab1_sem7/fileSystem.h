@@ -9,7 +9,7 @@
 
 void PrintAdditionalMenu();
 
-bool IsPathGood(std::string path);
+bool IsPathIncorrect(std::string path);
 
 bool IsReadOnly(std::string filename);
 

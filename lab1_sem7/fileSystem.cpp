@@ -10,24 +10,16 @@
 using namespace std::experimental::filesystem;
 using namespace std;
 
-bool IsPathGood(string path) { // Проверка пути
+bool IsPathIncorrect
+(string path) { // Проверка пути
   size_t found = path.find_last_of("\\");
   size_t point = path.find_last_of(".");
   size_t base = point - found - 1;
-  string baseFilenameStr = path.substr(found + 1, base);
-  const char* basefilenameChar = baseFilenameStr.c_str();
+  string basefilenameStr = path.substr(found + 1, base);
+  const char* basefilenameChar = basefilenameStr.c_str();
   ofstream file(path, ios::app);
-  //if (!_strcmpi(basefilenameChar, "con")) {
-  //  file.close(); // мб не надо
-  //  throw WrongPathInput("Некорректное указание пути или имени файла.", filename, context);
-  //}
-  //if (!std::filesystem::is_regular_file(filename)) {   НАЙТИ ЗАМЕНУ ДЛЯ 14 СТАНДАРТА
-  //  file.close(); // мб не надо
-  //  throw WrongPathInput("Некорректное указание пути или имени файла.", filename);
-  //}
-  //file.close();
-  if (_strcmpi(basefilenameChar, "con")) return false;
-  if (is_regular_file(path)) return false;
+  if (!_strcmpi(basefilenameChar, "con")) return true;
+  if (!is_regular_file(path)) return true;
   file.close();
   return true;
 }
@@ -38,7 +30,6 @@ bool IsReadOnly(string path) { // Проверка файла на атрибут "только для чтения"
   LPCSTR name = path.c_str();
   FindFirstFileA(name, &findData);
   if (findData.dwFileAttributes & FILE_ATTRIBUTE_READONLY) {
-    //throw FileIsReadOnly("Невозможно сохранить данные в файл, предназначенный только для чтения.", context);
     return true;
   }
   return false;
@@ -48,37 +39,23 @@ void PathInput(string& path) {
   int userChoice;
   system("cls");
   cout << "Введите путь к файлу: ";
-  //cin.get();
-  getline(cin, path);
-  cin.ignore(numeric_limits<streamsize>::max(), '\n');
-  while (IsPathGood(path) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
-    if (IsPathGood(path)) {
+  cin >> path;
+  //getline(cin, path);
+  //cin.ignore(numeric_limits<streamsize>::max(), '\n');
+  while (IsPathIncorrect(path) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
+    if (IsPathIncorrect(path)) {
       cerr << "Некорректное указание пути или имени файла." << endl;
+      system("pause");
     }
     if (IsReadOnly(path)) {
       cerr << "Невозможно сохранить данные в файл, предназначенный только для чтения." << endl;
+      system("pause");
     }
     PrintErrorMenu();
     MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
     switch (userChoice) {
     case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
       PathInput(path);
-      //switch (context) { // Вызов метода, в котором произошлfа ошибка
-      //case SaveResultContext: {
-      //  SaveFile(text, wordsWithSearchSymbol, searchSymbol, ex.GetContext());
-      //  break; }
-      //case SaveInitialDataContext: {
-      //  SaveFile(text, wordsWithSearchSymbol, searchSymbol, ex.GetContext());
-      //  break; }
-      //case InputContext: {
-      //  FileInput(text, searchSymbol);
-      //  PrintText(text, searchSymbol);
-      //  SplitText(text, wordsWithSearchSymbol);
-      //  FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
-      //  PrintResult(wordsWithSearchSymbol);
-      //  SaveData(text, wordsWithSearchSymbol, searchSymbol);
-      //  break; }
-      //}
       break;
     }
     case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
@@ -133,11 +110,6 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
   text.clear();
   string pathInput = "";
   PathInput(pathInput);
-  //system("cls");
-  //cout << "Введите путь к файлу: ";
-  //getline(cin, pathInput);
-  //CheckPath(pathInput);
-
   ifstream fin(pathInput);
   fin.seekg(0, ios::beg);
   string temp; // Переменная для временного хранения символов из файла
@@ -154,16 +126,10 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
 }
 
 void SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol, int saveContext) { // Функция для создания файлов с результатами или исоходными данными
-  //system("cls");
-  //cout << "Введите путь к файлу: ";
-  //getline(cin, pathInput);
-  //CheckPath(pathInput);
-  //CheckReadOnly(pathOutput);
   int userChoice;
   string pathOutput;
   PathInput(pathOutput);
   ifstream fout(pathOutput);
-  //cout << endl;
   fout.close();
   /*while*/ if (fout) { // Если файл уже существует
     PrintAdditionalMenu(); // Вывод вспомогательного меню

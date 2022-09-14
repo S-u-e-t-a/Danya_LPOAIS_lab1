@@ -139,7 +139,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="exceptions.cpp" />
     <ClCompile Include="fileSystem.cpp" />
     <ClCompile Include="userInterface.cpp" />
     <ClCompile Include="main.cpp" />
