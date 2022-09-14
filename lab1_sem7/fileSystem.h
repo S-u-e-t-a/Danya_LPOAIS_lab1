@@ -12,7 +12,7 @@ bool IsPathGood(std::string path);
 
 bool IsReadOnly(std::string filename);
 
-void PathInput(std::string path);
+void PathInput(std::string& path);
 
 void PrintAdditionalMenu();
 

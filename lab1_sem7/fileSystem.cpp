@@ -3,6 +3,10 @@
 #include "exceptions.h"
 #include <Windows.h>
 
+#ifdef max
+#undef max
+#endif
+
 using namespace std::experimental::filesystem;
 using namespace std;
 
@@ -40,12 +44,13 @@ bool IsReadOnly(string filename) { // Проверка файла на атрибут "только для чтен
   return false;
 }
 
-void PathInput(string path) {
+void PathInput(string& path) {
   int userChoice;
   system("cls");
   cout << "Введите путь к файлу: ";
-  cin.get();
+  //cin.get();
   getline(cin, path);
+  cin.ignore(numeric_limits<streamsize>::max(), '\n');
   while (IsPathGood(path) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
     if (IsPathGood(path)) {
       cerr << "Некорректное указание пути или имени файла." << endl;
@@ -58,7 +63,6 @@ void PathInput(string path) {
     switch (userChoice) {
     case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
       PathInput(path);
-
       //switch (context) { // Вызов метода, в котором произошлfа ошибка
       //case SaveResultContext: {
       //  SaveFile(text, wordsWithSearchSymbol, searchSymbol, ex.GetContext());
@@ -75,7 +79,6 @@ void PathInput(string path) {
       //  SaveData(text, wordsWithSearchSymbol, searchSymbol);
       //  break; }
       //}
-
       break;
     }
     case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
