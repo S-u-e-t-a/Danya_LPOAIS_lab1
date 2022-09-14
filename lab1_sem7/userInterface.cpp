@@ -7,14 +7,31 @@
 using namespace std;
 
 void MenuInputCheck(int* userChoice, int min, int max) { // Проверка ручного ввода. Позволяет вводить только числа
-  bool choiceIsCorrect = false;
-  while (choiceIsCorrect == false) {
-    if ((cin >> *userChoice).good() && *userChoice >= min && *userChoice <= max) {
-      choiceIsCorrect = true;
-    }
-    else {
-      throw WrongChoiceException("Введено неправильное значение.", userChoice, min, max);
-      //MenuInputCheck(userChoice, min, max);
+  //bool choiceIsCorrect = false;
+  //while (choiceIsCorrect == false) {
+  //  if ((cin >> *userChoice).good() && *userChoice >= min && *userChoice <= max) {
+  //    choiceIsCorrect = true;
+  //  }
+  //  else {
+  //    //throw WrongChoiceException("Введено неправильное значение.", userChoice, min, max);
+  //    cerr << "Введено неправильное значение." << endl;
+  //    //cout << "Значение ввода: " << *userChoice << endl;
+  //    cout << endl;
+  //    cout << "Введите значение: ";
+  //    MenuInputCheck(userChoice, min, max);
+  //  }
+  //}
+  cin.ignore(numeric_limits<streamsize>::max(), '\n');
+  while (cin.fail()) {
+    if (*userChoice >= min && *userChoice <= max) {
+      cin.clear();
+      cerr << "Введено неправильное значение.";
+      cout << endl;
+      cout << "Введите значение: ";
+      cin.ignore(numeric_limits<streamsize>::max(), '\n');
+      cin >> *userChoice;
+      cin.ignore(numeric_limits<streamsize>::max(), '\n');
+      MenuInputCheck(userChoice, min, max);
     }
   }
 }
@@ -162,6 +179,8 @@ void Menu() { // Главное меню
     cout << endl;
     cerr << "Ошибка: " << ex.what() << endl;
     cout << "Значение ввода: " << *(ex.GetDataState()) << endl; // Если ввести букву, то тут выведет 0
+    cout << endl;
+    cout << "Введите значение: ";
     MenuInputCheck(ex.GetDataState(), ex.GetMin(), ex.GetMax());
   }
   catch (WrongPathInput& ex)
@@ -202,7 +221,8 @@ void Menu() { // Главное меню
   catch (FileIsReadOnly& ex)
   {
     cout << endl;
-    cerr << "Ошибка: " << ex.what() << endl;
+    //cerr << "Ошибка: " << ex.what() << endl;
+    cerr << "Невозможно сохранить данные в файл, предназначенный только для чтения." << endl;
     PrintErrorMenu();
     MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
     switch (userChoice) {

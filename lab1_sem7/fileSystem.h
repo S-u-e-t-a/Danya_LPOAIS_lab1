@@ -8,11 +8,11 @@
 
 void PrintAdditionalMenu();
 
-void CheckPath(std::string path, int context);
+bool IsPathGood(std::string path);
 
-void CheckReadOnly(std::string filename, int context);
+bool IsReadOnly(std::string filename);
 
-void PathInput(std::string path, int context);
+void PathInput(std::string path);
 
 void PrintAdditionalMenu();
 
