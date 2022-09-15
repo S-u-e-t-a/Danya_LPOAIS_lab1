@@ -155,3 +155,4 @@ void Menu() { // Главное меню
   case ExitMenuItem: {cout << "Программа завершена." << endl; exit(0); }
   }
 }
+
