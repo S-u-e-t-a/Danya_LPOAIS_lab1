@@ -17,7 +17,7 @@ bool IsPathIncorrect
   size_t base = point - found - 1;
   string basefilenameStr = path.substr(found + 1, base);
   const char* basefilenameChar = basefilenameStr.c_str();
-  ofstream file(path, ios::app);
+  ifstream file(path, ios::app);
   if (!_strcmpi(basefilenameChar, "con")) return true;
   if (!is_regular_file(path)) return true;
   file.close();
@@ -25,7 +25,7 @@ bool IsPathIncorrect
 }
 
 bool IsReadOnly(string path) { // Проверка файла на атрибут "только для чтения"
-  ofstream file(path);
+  ifstream file(path);
   WIN32_FIND_DATAA findData;
   LPCSTR name = path.c_str();
   FindFirstFileA(name, &findData);
