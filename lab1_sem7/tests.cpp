@@ -141,7 +141,7 @@ void RunModuleTests() {
 
 	if (count == Number_Of_Tests) { // Тест прошёл успешно
 		cout << "Тестирование прошло успешно." << endl;
-		cout << endl;
+    system("pause");
 	}
 	else {
 		cerr << "Тестирование провалилось." << endl;
@@ -149,6 +149,6 @@ void RunModuleTests() {
 		cout << "* Неверно введены ожидаемый результаты подсчёта" << endl;
 		cout << "* Неверно введен исходный текст" << endl;
 		cout << "* Неверно введен ожидаемый текст" << endl;
-		cout << endl;
+    system("pause");
 	}
 }
