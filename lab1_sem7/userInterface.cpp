@@ -2,7 +2,7 @@
 #include "textFunctions.h"
 #include "userInterface.h"
 #include "exceptions.h"
-//#include "module_test.h"
+#include "tests.h"
 
 using namespace std;
 
@@ -151,7 +151,7 @@ void Menu() { // Главное меню
     SaveData(text, wordsWithSearchSymbol, searchSymbol);
     break; }
   case ShowInfoMenuItem: {Greeting(); Menu(); break; }
-                       //case UnitTestMenuItem: {Module_Test(); Menu(); break; }
+  case UnitTestMenuItem: {RunModuleTests(); Menu(); break; }
   case ExitMenuItem: {cout << "Программа завершена." << endl; exit(0); }
   }
 }

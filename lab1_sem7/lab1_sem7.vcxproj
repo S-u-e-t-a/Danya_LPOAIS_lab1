@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="fileSystem.cpp" />
+    <ClCompile Include="tests.cpp" />
     <ClCompile Include="userInterface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="textFunctions.cpp" />
@@ -147,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="exceptions.h" />
     <ClInclude Include="fileSystem.h" />
+    <ClInclude Include="tests.h" />
     <ClInclude Include="textFunctions.h" />
     <ClInclude Include="userInterface.h" />
   </ItemGroup>
