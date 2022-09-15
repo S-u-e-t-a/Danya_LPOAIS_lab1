@@ -6,7 +6,23 @@
 
 #ifndef PCH_H
 #define PCH_H
-
-// Добавьте сюда заголовочные файлы для предварительной компиляции
-
+//#include "CppUnitTest.h"
+//#include<iostream>
+//#include<string>
+//#include<vector>
+//
+//namespace Microsoft
+//{
+//  namespace VisualStudio
+//  {
+//    namespace CppUnitTestFramework
+//    {
+//      template<> static std::wstring ToString<class std::vector<class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char> >, class std::allocator<class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char> > > > >
+//      (const class std::vector<class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char> >, class std::allocator<class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char> > > >& t)
+//      {
+//        RETURN_WIDE_STRING(t.ToString().c_str());
+//      }
+//    }
+//  }
+//}
 #endif //PCH_H
