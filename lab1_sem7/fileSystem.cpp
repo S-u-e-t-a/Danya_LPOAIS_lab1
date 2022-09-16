@@ -16,7 +16,7 @@ bool IsPathIncorrect(string path) { // Проверка пути
   size_t base = point - found - 1;
   string basefilenameStr = path.substr(found + 1, base);
   const char* basefilenameChar = basefilenameStr.c_str();
-  ofstream file(path, ios::app); // создаёт файлы с этим именем хз норм ли
+  ofstream file(path, ios::app); // создаёт файлы с этим именем хз норм ли // КАРОЧ ДМОА СДЕЛАТЬ ПОИСКАТЬ
   if (!_strcmpi(basefilenameChar, "con")) return true;
   if (!is_regular_file(path)) return true;
   file.close();
@@ -37,7 +37,7 @@ bool IsReadOnly(string path) { // Проверка файла на атрибут "только для чтения"
   }
 }
 
-void PathInput(string& path) {
+int PathInput(string& path) {
   int userChoice;
   system("cls");
   cout << "Введите путь к файлу: ";
@@ -62,11 +62,12 @@ void PathInput(string& path) {
     }
     case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
       PrintMenu(); // попробовать вернуть здесь енам при выходе
-      return; break; }
+      return ExitFromPathInput; }
     }
     /*cout << "Введите путь к файлу: ";
     getline(cin, path);*/
   }
+  return NoExit;
 }
 
 void PrintAdditionalMenu() { // Вспомогательное меню, если в ходе сохранения файла был обнаружен уже существующий файл
@@ -111,67 +112,79 @@ void PrintInitialData(const vector<string>& text, string& path) { // Функция для
 void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтения данных из файла
   text.clear();
   string pathInput = "";
-  PathInput(pathInput);
-  ifstream fin(pathInput);
-  fin.seekg(0, ios::beg);
-  string temp; // Переменная для временного хранения символов из файла
-  int count = 0;
-  while (!fin.eof()) {  // При вводе любой строки зацикливается + создаётся файл с названием строки
-    temp = "";
-    if (count == 0) {
-      fin >> searchSymbol;
-      count++;
+  int res = PathInput(pathInput);
+  if (res == NoExit) {
+    ifstream fin(pathInput);
+    fin.seekg(0, ios::beg);
+    string temp; // Переменная для временного хранения символов из файла
+    int count = 0;
+    while (!fin.eof()) {  // При вводе любой строки зацикливается + создаётся файл с названием строки
+      temp = "";
+      if (count == 0) {
+        fin >> searchSymbol;
+        count++;
+      }
+      while (getline(fin, temp))
+        text.push_back(temp);
     }
-    while (getline(fin, temp))
-      text.push_back(temp);
+    fin.close();
   }
-  fin.close();
+  else {
+    return;
+  }
 }
 
 void SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol, int saveContext) { // Функция для создания файлов с результатами или исоходными данными
   int userChoice;
   string pathOutput;
-  PathInput(pathOutput);
-  ifstream fout(pathOutput); // мб fstream
-  fout.close(); // хз зачем
-  /*while*/ if (fout) { // Если файл уже существует
-    PrintAdditionalMenu(); // Вывод вспомогательного меню
-    MenuInputCheck(&userChoice, CreateNewFileMenuItem, GoBackMenuItem);
-    switch (userChoice) {
-    case RewriteMenuItem: { // Вариант с перезаписью
-      ofstream fout(pathOutput);
-      switch (saveContext) {
-      case SaveResultContext: { // Сохранение результатов
-        PrintResult(text, wordsWithSearchSymbol, searchSymbol, pathOutput);
+  int res = PathInput(pathOutput);
+  if (res == NoExit) {
+    remove(pathOutput);
+    // тут мб удалить файл по путю
+    ifstream fout(pathOutput); // мб fstream
+    //fout.close(); // хз зачем
+    /*while*/ if (fout) { // Если файл уже существует
+      PrintAdditionalMenu(); // Вывод вспомогательного меню
+      MenuInputCheck(&userChoice, CreateNewFileMenuItem, GoBackMenuItem);
+      switch (userChoice) {
+      case RewriteMenuItem: { // Вариант с перезаписью
+        ofstream fout(pathOutput);
+        switch (saveContext) {
+        case SaveResultContext: { // Сохранение результатов
+          PrintResult(text, wordsWithSearchSymbol, searchSymbol, pathOutput);
+          fout.close();
+          break; }
+        case SaveInitialDataContext: { // Сохранение исходных данных
+          fout.close();
+          PrintInitialData(text, pathOutput);
+          break; }
+        }
+        break;
+      }
+      case CreateNewFileMenuItem: { // Вариант с созданием нового файла
         fout.close();
+        SaveFile(text, wordsWithSearchSymbol, searchSymbol, saveContext);
+        break;
+      }
+      case GoBackMenuItem: { // Вариант выйти в главное меню
+        PrintMenu();
         break; }
-      case SaveInitialDataContext: { // Сохранение исходных данных
-        fout.close();
+      }
+      //break;
+    }
+    if (!fout) { // Если файла ещё не существует по данному пути, то происходит создание файла и его сохранение
+      switch (saveContext) {
+      case SaveResultContext: {
+        PrintResult(text, wordsWithSearchSymbol, searchSymbol, pathOutput);
+        break; }
+      case SaveInitialDataContext: {
         PrintInitialData(text, pathOutput);
         break; }
       }
-      break;
-    }
-    case CreateNewFileMenuItem: { // Вариант с созданием нового файла
       fout.close();
-      SaveFile(text, wordsWithSearchSymbol, searchSymbol, saveContext);
-      break;
     }
-    case GoBackMenuItem: { // Вариант выйти в главное меню
-      PrintMenu();
-      break; }
-    }
-    //break;
   }
-  if (!fout) { // Если файла ещё не существует по данному пути, то происходит создание файла и его сохранение
-    switch (saveContext) {
-    case SaveResultContext: {
-      PrintResult(text, wordsWithSearchSymbol, searchSymbol, pathOutput);
-      break; }
-    case SaveInitialDataContext: {
-      PrintInitialData(text, pathOutput);
-      break; }
-    }
-    fout.close();
+  else {
+    return;
   }
 }

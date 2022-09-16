@@ -13,7 +13,7 @@ bool IsPathIncorrect(std::string path);
 
 bool IsReadOnly(std::string filename);
 
-void PathInput(std::string& path);
+int PathInput(std::string& path);
 
 void PrintAdditionalMenu();
 
@@ -28,3 +28,5 @@ void SaveFile(const std::vector<std::string>& text, const std::vector<std::strin
 enum SavingMenuItems { RewriteMenuItem = 1, CreateNewFileMenuItem, GoBackMenuItem };
 
 enum ErrorMenuItems { EnterDataAgainMenuItem = 1, GoBackToMainMenuMenuItem };
+
+enum ExitCodes { NoExit, ExitFromPathInput, ExitFromFileFuncs };
