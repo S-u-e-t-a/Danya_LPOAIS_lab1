@@ -3,6 +3,8 @@
 #include <string>
 #include <algorithm>
 
+bool ContainSeparators(const std::vector<char> separators, const std::string s);
+
 bool ContainSeparators(const std::vector<char> separators, const char symbol);
 
 void SplitText(const std::vector<std::string>& text, std::vector<std::string>& wordsWithSearchSymbol);

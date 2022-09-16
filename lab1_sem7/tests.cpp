@@ -1,5 +1,5 @@
-#include "textFunctions.h"
 #include <iostream>
+#include "textFunctions.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ void RunModuleTests() {
     vector<string> actual;
     SplitText(testText, actual);
     vector<string> expected = { "test1", "test2", "test3", "test4" };
-    if (actual == expected) {
+    if (actual != expected) {
       cout << "Тест №1 провалился." << endl;
       cout << endl;
       count--;
@@ -21,10 +21,10 @@ void RunModuleTests() {
 
 #pragma region SplitTextUnitTest2
     testText = { "test1.../!@$%^test2" };
-    actual = { "" };
+    actual.clear();
     SplitText(testText, actual);
     expected = { "test1", "test2" };
-    if (actual == expected) {
+    if (actual != expected) {
       cout << "Тест №2 провалился." << endl;
       cout << endl;
       count--;
@@ -33,10 +33,10 @@ void RunModuleTests() {
 
 #pragma region SplitTextUnitTest3
     testText = { "test1\n test2\n test3\n test4" };
-    actual = { "" };
+    actual.clear();
     SplitText(testText, actual);
     expected = { "test1", "test2", "test3", "test4" };
-    if (actual == expected) {
+    if (actual != expected) {
       cout << "Тест №3 провалился." << endl;
       cout << endl;
       count--;
@@ -45,10 +45,10 @@ void RunModuleTests() {
 
 #pragma region SplitTextUnitTest4
     testText = { "t e s t		" };
-    actual = { "" };
+    actual.clear();
     SplitText(testText, actual);
     expected = { "t", "e", "s", "t" };
-    if (actual == expected) {
+    if (actual != expected) {
       cout << "Тест №4 провалился." << endl;
       cout << endl;
       count--;
@@ -57,10 +57,10 @@ void RunModuleTests() {
 
 #pragma region SplitTextUnitTest5
     testText = { "test1 @$ @# () [test2\t] + test3. -test4" };
-    actual = { "" };
+    actual.clear();
     SplitText(testText, actual);
      expected = { "test1", "test2", "test3", "test4" };
-    if (actual == expected) {
+    if (actual != expected) {
       cout << "Тест №5 провалился." << endl;
       cout << endl;
       count--;
@@ -69,10 +69,10 @@ void RunModuleTests() {
 
 #pragma region SplitTextUnitTest6
     testText = { "10+11=21\n 9 + 10 = 21" };
-    actual = { "" };
+    actual.clear();
     SplitText(testText, actual);
     expected = { "10", "11", "21", "9", "10", "21" };
-    if (actual == expected) {
+    if (actual != expected) {
       cout << "Тест №6 провалился." << endl;
       cout << endl;
       count--;
@@ -84,7 +84,7 @@ void RunModuleTests() {
     string searchSymbol = "1";
     FindSymbolInText(actual, searchSymbol);
     expected = { "test1" };
-    if (actual == expected) {
+    if (actual != expected) {
       cout << "Тест №7 провалился." << endl;
       cout << endl;
       count--;
@@ -96,7 +96,7 @@ void RunModuleTests() {
     searchSymbol = "ee";
     FindSymbolInText(actual, searchSymbol);
     expected = { "teest2" };
-    if (actual == expected) {
+    if (actual != expected) {
       cout << "Тест №8 провалился." << endl;
       cout << endl;
       count--;
@@ -119,8 +119,8 @@ void RunModuleTests() {
     actual = { "12", "34", "56", "78", "t3st", "7es7", "te5t", "7357" };
     searchSymbol = "1";
     FindSymbolInText(actual, searchSymbol);
-    expected = { "7" };
-    if (actual == expected) {
+    expected = { "12" };
+    if (actual != expected) {
       cout << "Тест №10 провалился." << endl;
       cout << endl;
       count--;
@@ -128,11 +128,23 @@ void RunModuleTests() {
 #pragma endregion
 
 #pragma region FindSymbolInTextUnitTest5
+    actual = { "12", "34", "56", "78", "t3st", "7es7", "te5t", "7357" };
+    searchSymbol = "7";
+    FindSymbolInText(actual, searchSymbol);
+    expected = { "78", "7es7", "7357"};
+    if (actual != expected) {
+      cout << "Тест №10 провалился." << endl;
+      cout << endl;
+      count--;
+    }
+#pragma endregion
+
+#pragma region FindSymbolInTextUnitTest6
     actual = { "test1", "test2", "test3", "test4" };
     searchSymbol = "1";
     FindSymbolInText(actual, searchSymbol);
     expected = { "test1" };
-    if (actual == expected) {
+    if (actual != expected) {
       cout << "Тест №11 провалился." << endl;
       cout << endl;
       count--;

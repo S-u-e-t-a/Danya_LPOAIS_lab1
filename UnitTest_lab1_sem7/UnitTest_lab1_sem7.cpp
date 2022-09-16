@@ -27,7 +27,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
-namespace UnitTestlab1sem7
+namespace UnitTest_lab1_sem7
 {
   TEST_CLASS(UnitTestlab1sem7)
   {
