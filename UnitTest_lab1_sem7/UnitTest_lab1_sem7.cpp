@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "CppUnitTest.h"
 #include "../lab1_sem7/textFunctions.h"
+#include "../lab1_sem7/textFunctions.cpp"
 
 //namespace Microsoft {
 //  namespace VisualStudio {
@@ -33,7 +34,7 @@ namespace UnitTest_lab1_sem7
   {
   public:
 #pragma region SplitTextTests
-    TEST_METHOD(TestMethod1)
+    TEST_METHOD(SplitTextTest1)
     {
       vector<string> testText = { "test1 test2\t test3. test4" };
       vector<string> actual;
@@ -45,7 +46,7 @@ namespace UnitTest_lab1_sem7
       //Assert::AreEqual(expected, actual);
       Assert::IsTrue(actual == expected);
     }
-    TEST_METHOD(TestMethod2)
+    TEST_METHOD(SplitTextTest2)
     {
       vector<string> testText = { "test1.../!@$%^test2" };
       vector<string> actual;
@@ -57,7 +58,7 @@ namespace UnitTest_lab1_sem7
       //Assert::AreEqual(expected, actual);
       Assert::IsTrue(actual == expected);
     }
-    TEST_METHOD(TestMethod3)
+    TEST_METHOD(SplitTextTest3)
     {
       vector<string> testText = { "test1\n test2\n test3\n test4" };
       vector<string> actual;
@@ -69,7 +70,7 @@ namespace UnitTest_lab1_sem7
       //Assert::AreEqual(expected, actual);
       Assert::IsTrue(actual == expected);
     }
-    TEST_METHOD(TestMethod4)
+    TEST_METHOD(SplitTextTest4)
     {
       vector<string> testText = { "t e s t		" };
       vector<string> actual;
@@ -81,7 +82,7 @@ namespace UnitTest_lab1_sem7
       //Assert::AreEqual(expected, actual);
       Assert::IsTrue(actual == expected);
     }
-    TEST_METHOD(TestMethod5)
+    TEST_METHOD(SplitTextTest5)
     {
       vector<string> testText = { "test1 @$ @# () [test2\t] + test3. -test4" };
       vector<string> actual;
@@ -93,7 +94,7 @@ namespace UnitTest_lab1_sem7
       //Assert::AreEqual(expected, actual);
       Assert::IsTrue(actual == expected);
     }
-    TEST_METHOD(TestMethod6)
+    TEST_METHOD(SplitTextTest6)
     {
       vector<string> testText = { "10+11=21\n 9 + 10 = 21" };
       vector<string> actual;
@@ -108,7 +109,7 @@ namespace UnitTest_lab1_sem7
 #pragma endregion
 
 #pragma region FindSymbolInTextTests
-    TEST_METHOD(TestMethod7)
+    TEST_METHOD(FindSymbolInTextTest1)
     {
       vector<string> actual = { "test1", "test2", "test3", "test4" };
       string searchSymbol = "1";
@@ -120,7 +121,7 @@ namespace UnitTest_lab1_sem7
       //Assert::AreEqual(expected, actual);
       Assert::IsTrue(actual == expected);
     }
-    TEST_METHOD(TestMethod8)
+    TEST_METHOD(FindSymbolInTextTest2)
     {
       vector<string> actual = { "test1", "teest2", "test3", "test4" };
       string searchSymbol = "ee";
@@ -132,31 +133,43 @@ namespace UnitTest_lab1_sem7
       //Assert::AreEqual(expected, actual);
       Assert::IsTrue(actual == expected);
     }
-    TEST_METHOD(TestMethod9)
+    TEST_METHOD(FindSymbolInTextTest3)
     {
       vector<string> actual = { "test", "toast", "least", "beast" };
       string searchSymbol = "as";
       FindSymbolInText(actual, searchSymbol);
-      vector<string> expected = { "toast", "beast" };
+      vector<string> expected = { "toast", "least", "beast" };
       //for (unsigned int i = 0; i < actual.size(); i++) {
       //  Assert::AreEqual(actual[i], expected[i]);
       //}
       //Assert::AreEqual(expected, actual);
       Assert::IsTrue(actual == expected);
     }
-    TEST_METHOD(TestMethod10)
+    TEST_METHOD(FindSymbolInTextTest4)
     {
       vector<string> actual = { "12", "34", "56", "78", "t3st", "7es7", "te5t", "7357" };
       string searchSymbol = "1";
       FindSymbolInText(actual, searchSymbol);
-      vector<string> expected = { "7" };
+      vector<string> expected = { "12" };
       //for (unsigned int i = 0; i < actual.size(); i++) {
       //  Assert::AreEqual(actual[i], expected[i]);
       //}
       //Assert::AreEqual(expected, actual);
       Assert::IsTrue(actual == expected);
     }
-    TEST_METHOD(TestMethod11)
+    TEST_METHOD(FindSymbolInTextTest5)
+    {
+      vector<string> actual = { "12", "34", "56", "78", "t3st", "7es7", "te5t", "7357" };
+      string searchSymbol = "7";
+      FindSymbolInText(actual, searchSymbol);
+      vector<string> expected = { "78", "7es7", "7357" };
+      //for (unsigned int i = 0; i < actual.size(); i++) {
+      //  Assert::AreEqual(actual[i], expected[i]);
+      //}
+      //Assert::AreEqual(expected, actual);
+      Assert::IsTrue(actual == expected);
+    }
+    TEST_METHOD(FindSymbolInTextTest6)
     {
       vector<string> actual = { "test1", "test2", "test3", "test4" };
       string searchSymbol = "1";

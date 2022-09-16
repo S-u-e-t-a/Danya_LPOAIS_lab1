@@ -10,29 +10,31 @@
 using namespace std::experimental::filesystem;
 using namespace std;
 
-bool IsPathIncorrect
-(string path) { // Проверка пути
+bool IsPathIncorrect(string path) { // Проверка пути
   size_t found = path.find_last_of("\\");
   size_t point = path.find_last_of(".");
   size_t base = point - found - 1;
   string basefilenameStr = path.substr(found + 1, base);
   const char* basefilenameChar = basefilenameStr.c_str();
-  ifstream file(path, ios::app);
+  ofstream file(path, ios::app); // создаёт файлы с этим именем хз норм ли
   if (!_strcmpi(basefilenameChar, "con")) return true;
   if (!is_regular_file(path)) return true;
   file.close();
-  return true;
+  return false;
 }
 
 bool IsReadOnly(string path) { // Проверка файла на атрибут "только для чтения"
-  ifstream file(path);
+  //ofstream file(path);
   WIN32_FIND_DATAA findData;
   LPCSTR name = path.c_str();
+  FindFirstFileA(name, &findData);
   FindFirstFileA(name, &findData);
   if (findData.dwFileAttributes & FILE_ATTRIBUTE_READONLY) {
     return true;
   }
-  return false;
+  else {
+    return false;
+  }
 }
 
 void PathInput(string& path) {
@@ -59,8 +61,8 @@ void PathInput(string& path) {
       break;
     }
     case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
-      PrintMenu();
-      break; }
+      PrintMenu(); // попробовать вернуть здесь енам при выходе
+      return; break; }
     }
     /*cout << "Введите путь к файлу: ";
     getline(cin, path);*/
@@ -115,6 +117,7 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
   string temp; // Переменная для временного хранения символов из файла
   int count = 0;
   while (!fin.eof()) {  // При вводе любой строки зацикливается + создаётся файл с названием строки
+    temp = "";
     if (count == 0) {
       fin >> searchSymbol;
       count++;
@@ -129,8 +132,8 @@ void SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchS
   int userChoice;
   string pathOutput;
   PathInput(pathOutput);
-  ifstream fout(pathOutput);
-  fout.close();
+  ifstream fout(pathOutput); // мб fstream
+  fout.close(); // хз зачем
   /*while*/ if (fout) { // Если файл уже существует
     PrintAdditionalMenu(); // Вывод вспомогательного меню
     MenuInputCheck(&userChoice, CreateNewFileMenuItem, GoBackMenuItem);
