@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void MenuInputCheck(int *userChoice, int min, int max) { // Проверка ручного ввода. Позволяет вводить только числа
+void MenuInputCheck(int* userChoice, int min, int max) { // Проверка ручного ввода. Позволяет вводить только числа
   if (cin.fail() || !(cin >> *userChoice).good() || *userChoice < min || *userChoice > max) {
     cin.clear();
     cout << endl;
@@ -69,6 +69,7 @@ void PrintText(const vector<string>& text, const string& searchSymbol) {
   for (int i = 0; i < text.size(); i++) {
     cout << text[i] << endl;
   }
+  cout << endl;
   cout << "Символ поиска: " << searchSymbol;
   cout << endl;
 }
@@ -82,7 +83,7 @@ void PrintResult(const vector<string>& wordsWithSearchSymbol) {
   cout << endl;
 }
 
-void ManualInput(vector<string>& text, string& searchSymbol) { // мб сюда исключение
+int ManualInput(vector<string>& text, string& searchSymbol) { // мб сюда исключение
   string buffer;
   system("cls");
   cout << "Введите текст." << endl;
@@ -106,27 +107,45 @@ void ManualInput(vector<string>& text, string& searchSymbol) { // мб сюда исключ
   }
   cout << "Введите символ для поиска: ";
   cin >> searchSymbol;
+  return NoError;
 }
 
-void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol) {
+int SaveData(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol) {
   int userChoice;
+  int res;
   PrintYesNoMenu("Сохранить результат в файл?");
   MenuInputCheck(&userChoice, Yes, No);
   switch (userChoice) {
-  case Yes: { SaveFile(text, wordsWithSearchSymbol, searchSymbol, SaveResultContext); break; }
+    // тут при ошибке прерывать функцию
+  case Yes: {
+    res = SaveFile(text, wordsWithSearchSymbol, searchSymbol, SaveResultContext);
+    if (res == ErrorInFileFuncs) {
+      return ErrorInFileFuncs;
+    }
+    break;
+  }
   case No: { break; }
   }
+
   cout << endl;
   PrintYesNoMenu("Сохранить исходные данные в файл?");
   MenuInputCheck(&userChoice, Yes, No);
   switch (userChoice) {
-  case Yes: { SaveFile(text, wordsWithSearchSymbol, searchSymbol, SaveInitialDataContext); break; }
+  case Yes: {
+    res = SaveFile(text, wordsWithSearchSymbol, searchSymbol, SaveInitialDataContext);
+    if (res == ErrorInFileFuncs) {
+      return ErrorInFileFuncs;
+    }
+    break;
+  }
   case No: { break; }
   }
+  return NoError;
 }
 
 void Menu() { // Главное меню
   int userChoice;
+  int res;
   vector<string> text;
   vector<string> wordsWithSearchSymbol;
   string searchSymbol;
@@ -135,24 +154,30 @@ void Menu() { // Главное меню
   cout << endl;
   switch (userChoice) {
   case ManualInputMenuItem: {
-    ManualInput(text, searchSymbol);
-    SplitText(text, wordsWithSearchSymbol);
-    FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
-    PrintResult(wordsWithSearchSymbol);
-    SaveData(text, wordsWithSearchSymbol, searchSymbol);
+    res = ManualInput(text, searchSymbol);
+    system("cls");
     break;
   }
   case InputFromFileMenuItem: {
-    FileInput(text, searchSymbol);
-    PrintText(text, searchSymbol);
-    SplitText(text, wordsWithSearchSymbol);
-    FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
-    PrintResult(wordsWithSearchSymbol);
-    SaveData(text, wordsWithSearchSymbol, searchSymbol);
+    res = FileInput(text, searchSymbol);
     break; }
   case ShowInfoMenuItem: {Greeting(); Menu(); break; }
   case UnitTestMenuItem: {RunModuleTests(); Menu(); break; }
   case ExitMenuItem: {cout << "Программа завершена." << endl; exit(0); }
+  }
+
+  if (res == NoError) { // Если при вводе не произошло ошибок
+    PrintText(text, searchSymbol);
+    SplitText(text, wordsWithSearchSymbol);
+    FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
+    PrintResult(wordsWithSearchSymbol);
+    res = SaveData(text, wordsWithSearchSymbol, searchSymbol);
+    if (res == NoError) {
+      Menu();
+    }
+    else {
+      system("pause");
+    }
   }
 }
 

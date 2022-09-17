@@ -10,16 +10,21 @@
 using namespace std::experimental::filesystem;
 using namespace std;
 
-bool IsPathIncorrect(string path) { // Проверка пути
+bool IsPathIncorrect(string path, int context) { // Проверка пути
   size_t found = path.find_last_of("\\");
   size_t point = path.find_last_of(".");
   size_t base = point - found - 1;
   string basefilenameStr = path.substr(found + 1, base);
   const char* basefilenameChar = basefilenameStr.c_str();
-  ofstream file(path, ios::app); // создаёт файлы с этим именем хз норм ли // КАРОЧ ДМОА СДЕЛАТЬ ПОИСКАТЬ
+  if (context == SaveContext) {
+    fstream file(path, ios::app); // изначально там ofstream
+    if (!file) {
+      file.close();
+      return true;
+    }
+  }
   if (!_strcmpi(basefilenameChar, "con")) return true;
   if (!is_regular_file(path)) return true;
-  file.close();
   return false;
 }
 
@@ -37,15 +42,17 @@ bool IsReadOnly(string path) { // Проверка файла на атрибут "только для чтения"
   }
 }
 
-int PathInput(string& path) {
+int PathInput(string& path, int context) {
   int userChoice;
   system("cls");
   cout << "Введите путь к файлу: ";
   cin >> path;
   //getline(cin, path);
   //cin.ignore(numeric_limits<streamsize>::max(), '\n');
-  while (IsPathIncorrect(path) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
-    if (IsPathIncorrect(path)) {
+  ifstream fout(path); // для сохранения
+  while (IsPathIncorrect(path, context) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
+    fout.close(); // для сохранения
+    if (IsPathIncorrect(path, context)) {
       cerr << "Некорректное указание пути или имени файла." << endl;
       system("pause");
     }
@@ -57,17 +64,18 @@ int PathInput(string& path) {
     MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
     switch (userChoice) {
     case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
-      PathInput(path);
+      PathInput(path, context);
       break;
     }
     case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
-      PrintMenu(); // попробовать вернуть здесь енам при выходе
-      return ExitFromPathInput; }
+      Menu();
+      return ErrorInPathInput; 
+      break; }
     }
     /*cout << "Введите путь к файлу: ";
     getline(cin, path);*/
   }
-  return NoExit;
+  return NoError;
 }
 
 void PrintAdditionalMenu() { // Вспомогательное меню, если в ходе сохранения файла был обнаружен уже существующий файл
@@ -109,11 +117,11 @@ void PrintInitialData(const vector<string>& text, string& path) { // Функция для
   }
 }
 
-void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтения данных из файла
+int FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтения данных из файла
   text.clear();
   string pathInput = "";
-  int res = PathInput(pathInput);
-  if (res == NoExit) {
+  int res = PathInput(pathInput, InputContext);
+  if (res == NoError) {
     ifstream fin(pathInput);
     fin.seekg(0, ios::beg);
     string temp; // Переменная для временного хранения символов из файла
@@ -128,19 +136,19 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
         text.push_back(temp);
     }
     fin.close();
+    return NoError;
   }
   else {
-    return;
+    return ErrorInFileFuncs;
   }
 }
 
-void SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol, int saveContext) { // Функция для создания файлов с результатами или исоходными данными
+int SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol, int saveContext) { // Функция для создания файлов с результатами или исоходными данными
   int userChoice;
   string pathOutput;
-  int res = PathInput(pathOutput);
-  if (res == NoExit) {
+  int res = PathInput(pathOutput, SaveContext);
+  if (res == NoError) {
     remove(pathOutput);
-    // тут мб удалить файл по путю
     ifstream fout(pathOutput); // мб fstream
     //fout.close(); // хз зачем
     /*while*/ if (fout) { // Если файл уже существует
@@ -167,10 +175,11 @@ void SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchS
         break;
       }
       case GoBackMenuItem: { // Вариант выйти в главное меню
-        PrintMenu();
+        Menu();
         break; }
       }
       //break;
+      return NoError;
     }
     if (!fout) { // Если файла ещё не существует по данному пути, то происходит создание файла и его сохранение
       switch (saveContext) {
@@ -182,9 +191,10 @@ void SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchS
         break; }
       }
       fout.close();
+      return NoError;
     }
   }
   else {
-    return;
+    return ErrorInFileFuncs;
   }
 }

@@ -9,11 +9,11 @@
 
 void PrintAdditionalMenu();
 
-bool IsPathIncorrect(std::string path);
+bool IsPathIncorrect(std::string path, int context);
 
 bool IsReadOnly(std::string filename);
 
-int PathInput(std::string& path);
+int PathInput(std::string& path, int context);
 
 void PrintAdditionalMenu();
 
@@ -21,12 +21,12 @@ void PrintResult(const std::vector<std::string>& text, const std::vector<std::st
 
 void PrintInitialData(const std::vector<std::string>& text, std::string& path);
 
-void FileInput(std::vector<std::string>& text, std::string& searchSymbol);
+int FileInput(std::vector<std::string>& text, std::string& searchSymbol);
 
-void SaveFile(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol, int saveContext);
+int SaveFile(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol, int saveContext);
 
 enum SavingMenuItems { RewriteMenuItem = 1, CreateNewFileMenuItem, GoBackMenuItem };
 
 enum ErrorMenuItems { EnterDataAgainMenuItem = 1, GoBackToMainMenuMenuItem };
 
-enum ExitCodes { NoExit, ExitFromPathInput, ExitFromFileFuncs };
+enum ErrorCodes { NoError, ErrorInPathInput, ErrorInFileFuncs };
