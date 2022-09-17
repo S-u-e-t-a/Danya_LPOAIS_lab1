@@ -83,7 +83,7 @@ void PrintResult(const vector<string>& wordsWithSearchSymbol) {
   cout << endl;
 }
 
-int ManualInput(vector<string>& text, string& searchSymbol) { // мб сюда исключение
+int ManualInput(vector<string>& text, string& searchSymbol) {
   string buffer;
   system("cls");
   cout << "¬ведите текст." << endl;

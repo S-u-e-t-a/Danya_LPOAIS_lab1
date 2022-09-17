@@ -108,7 +108,7 @@ void RunModuleTests() {
     searchSymbol = "as";
     FindSymbolInText(actual, searchSymbol);
     expected = { "toast", "least", "beast" };
-    if (actual == expected) {
+    if (actual != expected) {
       cout << "Тест №9 провалился." << endl;
       cout << endl;
       count--;
