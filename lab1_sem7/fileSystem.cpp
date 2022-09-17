@@ -69,7 +69,7 @@ int PathInput(string& path, int context) {
     }
     case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
       Menu();
-      return ErrorInPathInput; 
+      return ErrorInPathInput; // ПОТЕСТИТЬ МБ НЕ НУЖЕН RETURN ЕСЛИ ВЫЗЫВАЮ МЕНЮ
       break; }
     }
     /*cout << "Введите путь к файлу: ";

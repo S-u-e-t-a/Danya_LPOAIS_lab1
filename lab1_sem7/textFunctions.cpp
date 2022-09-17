@@ -66,7 +66,7 @@ void FindSymbolInText(vector<string>& wordsWithSearchSymbol, string searchSymbol
     //  remove(wordsWithSearchSymbol.begin(), wordsWithSearchSymbol.end(), tempWord);
     //}
     if (tempWord.find(searchSymbol) != string::npos) {
-      tempVec.push_back(tempWord);
+      tempVec.push_back(wordsWithSearchSymbol[i]);
     }
   }
   wordsWithSearchSymbol = tempVec;
