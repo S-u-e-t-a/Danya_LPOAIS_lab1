@@ -15,8 +15,6 @@ bool IsReadOnly(std::string filename);
 
 int PathInput(std::string& path, int context);
 
-void PrintAdditionalMenu();
-
 void PrintResult(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol, std::string& path);
 
 void PrintInitialData(const std::vector<std::string>& text, std::string& path);

@@ -3,7 +3,7 @@
 #include <string>
 #include <algorithm>
 
-bool ContainSeparators(const std::vector<char> separators, const std::string s);
+bool ContainSeparators(const std::vector<char> separators, const std::string str);
 
 bool ContainSeparators(const std::vector<char> separators, const char symbol);
 

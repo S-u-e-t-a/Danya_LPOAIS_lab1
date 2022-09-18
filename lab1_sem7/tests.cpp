@@ -3,19 +3,19 @@
 
 using namespace std;
 
-const int Number_Of_Tests = 11;
+const int NumberOfTests = 12;
 
 void RunModuleTests() {
-	int count = 11;
+    int count = 12;
 #pragma region SplitTextUnitTest1
     vector<string> testText = { "test1 test2\t test3. test4" };
     vector<string> actual;
     SplitText(testText, actual);
     vector<string> expected = { "test1", "test2", "test3", "test4" };
     if (actual != expected) {
-      cout << "Тест №1 провалился." << endl;
-      cout << endl;
-      count--;
+        cout << "Тест №1 провалился." << endl;
+        cout << endl;
+        count--;
     }
 #pragma endregion
 
@@ -25,9 +25,9 @@ void RunModuleTests() {
     SplitText(testText, actual);
     expected = { "test1", "test2" };
     if (actual != expected) {
-      cout << "Тест №2 провалился." << endl;
-      cout << endl;
-      count--;
+        cout << "Тест №2 провалился." << endl;
+        cout << endl;
+        count--;
     }
 #pragma endregion
 
@@ -37,9 +37,9 @@ void RunModuleTests() {
     SplitText(testText, actual);
     expected = { "test1", "test2", "test3", "test4" };
     if (actual != expected) {
-      cout << "Тест №3 провалился." << endl;
-      cout << endl;
-      count--;
+        cout << "Тест №3 провалился." << endl;
+        cout << endl;
+        count--;
     }
 #pragma endregion
 
@@ -49,9 +49,9 @@ void RunModuleTests() {
     SplitText(testText, actual);
     expected = { "t", "e", "s", "t" };
     if (actual != expected) {
-      cout << "Тест №4 провалился." << endl;
-      cout << endl;
-      count--;
+        cout << "Тест №4 провалился." << endl;
+        cout << endl;
+        count--;
     }
 #pragma endregion
 
@@ -59,11 +59,11 @@ void RunModuleTests() {
     testText = { "test1 @$ @# () [test2\t] + test3. -test4" };
     actual.clear();
     SplitText(testText, actual);
-     expected = { "test1", "test2", "test3", "test4" };
+    expected = { "test1", "test2", "test3", "test4" };
     if (actual != expected) {
-      cout << "Тест №5 провалился." << endl;
-      cout << endl;
-      count--;
+        cout << "Тест №5 провалился." << endl;
+        cout << endl;
+        count--;
     }
 #pragma endregion
 
@@ -73,9 +73,9 @@ void RunModuleTests() {
     SplitText(testText, actual);
     expected = { "10", "11", "21", "9", "10", "21" };
     if (actual != expected) {
-      cout << "Тест №6 провалился." << endl;
-      cout << endl;
-      count--;
+        cout << "Тест №6 провалился." << endl;
+        cout << endl;
+        count--;
     }
 #pragma endregion  
 
@@ -85,9 +85,9 @@ void RunModuleTests() {
     FindSymbolInText(actual, searchSymbol);
     expected = { "test1" };
     if (actual != expected) {
-      cout << "Тест №7 провалился." << endl;
-      cout << endl;
-      count--;
+        cout << "Тест №7 провалился." << endl;
+        cout << endl;
+        count--;
     }
 #pragma endregion
 
@@ -97,9 +97,9 @@ void RunModuleTests() {
     FindSymbolInText(actual, searchSymbol);
     expected = { "teest2" };
     if (actual != expected) {
-      cout << "Тест №8 провалился." << endl;
-      cout << endl;
-      count--;
+        cout << "Тест №8 провалился." << endl;
+        cout << endl;
+        count--;
     }
 #pragma endregion
 
@@ -109,9 +109,9 @@ void RunModuleTests() {
     FindSymbolInText(actual, searchSymbol);
     expected = { "toast", "least", "beast" };
     if (actual != expected) {
-      cout << "Тест №9 провалился." << endl;
-      cout << endl;
-      count--;
+        cout << "Тест №9 провалился." << endl;
+        cout << endl;
+        count--;
     }
 #pragma endregion
 
@@ -121,9 +121,9 @@ void RunModuleTests() {
     FindSymbolInText(actual, searchSymbol);
     expected = { "12" };
     if (actual != expected) {
-      cout << "Тест №10 провалился." << endl;
-      cout << endl;
-      count--;
+        cout << "Тест №10 провалился." << endl;
+        cout << endl;
+        count--;
     }
 #pragma endregion
 
@@ -131,11 +131,11 @@ void RunModuleTests() {
     actual = { "12", "34", "56", "78", "t3st", "7es7", "te5t", "7357" };
     searchSymbol = "7";
     FindSymbolInText(actual, searchSymbol);
-    expected = { "78", "7es7", "7357"};
+    expected = { "78", "7es7", "7357" };
     if (actual != expected) {
-      cout << "Тест №10 провалился." << endl;
-      cout << endl;
-      count--;
+        cout << "Тест №10 провалился." << endl;
+        cout << endl;
+        count--;
     }
 #pragma endregion
 
@@ -145,22 +145,22 @@ void RunModuleTests() {
     FindSymbolInText(actual, searchSymbol);
     expected = { "test1" };
     if (actual != expected) {
-      cout << "Тест №11 провалился." << endl;
-      cout << endl;
-      count--;
+        cout << "Тест №11 провалился." << endl;
+        cout << endl;
+        count--;
     }
 #pragma endregion
 
-	if (count == Number_Of_Tests) { // Тест прошёл успешно
-		cout << "Тестирование прошло успешно." << endl;
-    system("pause");
-	}
-	else {
-		cerr << "Тестирование провалилось." << endl;
-		cout << "Возможные причины ошибки: " << endl;
-		cout << "* Неверно введены ожидаемый результаты подсчёта" << endl;
-		cout << "* Неверно введен исходный текст" << endl;
-		cout << "* Неверно введен ожидаемый текст" << endl;
-    system("pause");
-	}
+    if (count == NumberOfTests) { // Тест прошёл успешно
+        cout << "Тестирование прошло успешно." << endl;
+        system("pause");
+    }
+    else {
+        cerr << "Тестирование провалилось." << endl;
+        cout << "Возможные причины ошибки: " << endl;
+        cout << "* Неверно введены ожидаемый результаты подсчёта" << endl;
+        cout << "* Неверно введен исходный текст" << endl;
+        cout << "* Неверно введен ожидаемый текст" << endl;
+        system("pause");
+    }
 }

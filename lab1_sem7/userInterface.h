@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 
-void MenuInputCheck(int* userChoice, int min, int max);
+void MenuInputCheck(int* userChoice, const int min, const int max);
 
 void Greeting();
 
@@ -26,4 +26,4 @@ enum Menu { ManualInputMenuItem = 1, InputFromFileMenuItem, ShowInfoMenuItem, Un
 
 enum SaveAnswer { Yes = 1, No };
 
-enum Context { SaveResultContext = 1, SaveInitialDataContext, SaveContext, InputContext};
+enum Context { SaveResultContext = 1, SaveInitialDataContext, SaveContext, InputContext };
