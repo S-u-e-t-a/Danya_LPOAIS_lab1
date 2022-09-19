@@ -15,11 +15,11 @@ bool IsReadOnly(std::string filename);
 
 int PathInput(std::string& path, int context);
 
-void PrintResult(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol, std::string& path);
+void PrintResultInFile(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol, std::string& path);
 
-void PrintInitialData(const std::vector<std::string>& text, std::string& path);
+void PrintInitialDataInFile(const std::vector<std::string>& text, std::string& path);
 
-int FileInput(std::vector<std::string>& text, std::string& searchSymbol);
+void FileInput(std::vector<std::string>& text, std::string& searchSymbol);
 
 int SaveFile(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol, int saveContext);
 

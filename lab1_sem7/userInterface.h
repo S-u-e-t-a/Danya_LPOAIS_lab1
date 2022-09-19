@@ -18,9 +18,9 @@ void PrintResult(const std::vector<std::string>& wordsWithSearchSymbol);
 
 void Menu();
 
-int ManualInput(std::vector<std::string>& text, std::string& searchSymbol);
+void ManualInput(std::vector<std::string>& text, std::string& searchSymbol);
 
-int SaveData(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol);
+void SaveData(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol);
 
 enum Menu { ManualInputMenuItem = 1, InputFromFileMenuItem, ShowInfoMenuItem, UnitTestMenuItem, ExitMenuItem };
 

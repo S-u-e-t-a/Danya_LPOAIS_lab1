@@ -17,8 +17,8 @@ bool IsPathIncorrect(string path, int context) { // Проверка на использование не
     string basefilenameStr = path.substr(found + 1, base);
     const char* basefilenameChar = basefilenameStr.c_str();
     if (context == SaveContext) { // Если проверка проходит в режиме сохранения
-        ofstream file(path, ios::app);
-        if (!file) {
+        ofstream file(path, ios::app); // ПОДХОДИТ ЕСЛИ НЕ БЫЛО ФАЙЛА. СОЗДАЁТ ФАЙЛ И is_regular_file НЕ ПИШЕТ ЧТО ЭТО ОШИБКА
+        if (!file) { // ПОСЛЕ remove ФАЙЛА И ДАЛЕЕ СНОВА СОЗДАЮ С ТАКИМ ИМЕНЕМ, НО ЕСЛИ ФАЙЛ БЫЛ, ТО ЗАТРЁТ ЕГО ДАННЫЕ.
             file.close();
             return true;
         }
@@ -49,7 +49,7 @@ int PathInput(string& path, int context) { // Ввод и проверка пути
     //getline(cin, path);
     //cin.ignore(numeric_limits<streamsize>::max(), '\n');
     ifstream fout(path); // для сохранения
-    while (IsPathIncorrect(path, context) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
+    if (IsPathIncorrect(path, context) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
         fout.close(); // для сохранения
         if (IsPathIncorrect(path, context)) { // Если путь некорректен
             cerr << "Некорректное указание пути или имени файла." << endl;
@@ -67,7 +67,7 @@ int PathInput(string& path, int context) { // Ввод и проверка пути
             break;
         }
         case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
-            Menu();
+            //Menu();
             return ErrorInPathInput; // ПОТЕСТИТЬ МБ НЕ НУЖЕН RETURN ЕСЛИ ВЫЗЫВАЮ МЕНЮ
             break; }
         }
@@ -87,7 +87,7 @@ void PrintAdditionalMenu() { // Вспомогательное меню, если в ходе сохранения фай
     cout << "Выберите пункт меню: ";
 }
 
-void PrintResult(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol, string& path) { // Вспомогательная функция для записи результата в файл
+void PrintResultInFile(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol, string& path) { // Вспомогательная функция для записи результата в файл
     ofstream fout(path);
     fout << "Исходный текст: " << endl;
     fout << endl;
@@ -105,18 +105,18 @@ void PrintResult(const vector<string>& text, const vector<string>& wordsWithSear
     }
 }
 
-void PrintInitialData(const vector<string>& text, string& path) { // Функция для записи исходных данных в файл
+void PrintInitialDataInFile(const vector<string>& text, string& path) { // Функция для записи исходных данных в файл
     ofstream fout(path);
     for (int i = 0; i < text.size(); i++) {
         fout << text[i] << endl;
     }
 }
 
-int FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтения данных из файла
+void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтения данных из файла
     text.clear();
     string path = "";
-    int res = PathInput(path, InputContext);
-    if (res == NoError) {
+    int errorCode = PathInput(path, InputContext);
+    if (errorCode == NoError) {
         ifstream fin(path);
         fin.seekg(0, ios::beg);
         string temp;
@@ -131,41 +131,39 @@ int FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтени
                 text.push_back(temp);
         }
         fin.close();
-        return NoError;
+        //return NoError;
     }
     else {
-        return ErrorInFileFuncs;
+        //return ErrorInFileFuncs;
+        Menu();
     }
 }
 
 int SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol, int context) { // Функция для создания файлов с результатами или исоходными данными
     int userChoice;
     string path;
-    int res = PathInput(path, SaveContext);
-    if (res == NoError) {
-        remove(path);
-        ifstream fout(path);
+    int errorCode = PathInput(path, SaveContext);
+    if (errorCode == NoError) {
+        //remove(path);
+        fstream fout(path);
         //fout.close(); // хз зачем
         /*while*/ if (fout) { // Если файл уже существует
             PrintAdditionalMenu(); // Вывод вспомогательного меню
             MenuInputCheck(&userChoice, CreateNewFileMenuItem, GoBackMenuItem);
             switch (userChoice) {
             case RewriteMenuItem: { // Вариант с перезаписью
-                ofstream fout(path);
+                //ofstream fout(path);
                 switch (context) {
                 case SaveResultContext: { // Сохранение результатов
-                    PrintResult(text, wordsWithSearchSymbol, searchSymbol, path);
-                    fout.close();
+                    PrintResultInFile(text, wordsWithSearchSymbol, searchSymbol, path);
                     break; }
                 case SaveInitialDataContext: { // Сохранение исходных данных
-                    fout.close();
-                    PrintInitialData(text, path);
+                    PrintInitialDataInFile(text, path);
                     break; }
                 }
                 break;
             }
             case CreateNewFileMenuItem: { // Вариант с созданием нового файла
-                fout.close();
                 SaveFile(text, wordsWithSearchSymbol, searchSymbol, context);
                 break;
             }
@@ -174,20 +172,19 @@ int SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSy
                 break; }
             }
             //break;
-            return NoError;
         }
         if (!fout) { // Если файла ещё не существует по данному пути
             switch (context) {
             case SaveResultContext: { // Сохранение результатов
-                PrintResult(text, wordsWithSearchSymbol, searchSymbol, path);
+                PrintResultInFile(text, wordsWithSearchSymbol, searchSymbol, path);
                 break; }
             case SaveInitialDataContext: { // Сохранение исходных данных
-                PrintInitialData(text, path);
+                PrintInitialDataInFile(text, path);
                 break; }
             }
-            fout.close();
-            return NoError;
         }
+        fout.close();
+        return NoError;
     }
     else {
         return ErrorInFileFuncs;
