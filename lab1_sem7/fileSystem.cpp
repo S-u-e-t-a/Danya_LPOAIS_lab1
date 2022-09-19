@@ -149,7 +149,7 @@ int SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSy
         //fout.close(); // хз зачем
         /*while*/ if (fout) { // Если файл уже существует
             PrintAdditionalMenu(); // Вывод вспомогательного меню
-            MenuInputCheck(&userChoice, CreateNewFileMenuItem, GoBackMenuItem);
+            MenuInputCheck(&userChoice, RewriteMenuItem, GoBackMenuItem);
             switch (userChoice) {
             case RewriteMenuItem: { // Вариант с перезаписью
                 //ofstream fout(path);

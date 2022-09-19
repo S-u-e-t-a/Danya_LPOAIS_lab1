@@ -136,7 +136,7 @@ void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchS
         errorCode = SaveFile(text, wordsWithSearchSymbol, searchSymbol, SaveInitialDataContext); // Вызов функции создания файла в режиме сохранения исходных данных
         if (errorCode == ErrorInFileFuncs) { // Если в ходе работы функции сохранения произошла ошибка, то функция прерывается // и возвращает код ошибки
             system("pause");
-            Menu();         
+            Menu();
             //return ErrorInFileFuncs;
         }
         break;
@@ -172,22 +172,22 @@ void Menu() { // Главное меню
         FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
         PrintResult(wordsWithSearchSymbol);
         SaveData(text, wordsWithSearchSymbol, searchSymbol);
-        break; 
+        break;
     }
     case ShowInfoMenuItem: { // Вывод информации о программе и авторе
-        Greeting(); 
+        Greeting();
         //Menu(); 
-        break; 
-    } 
+        break;
+    }
     case UnitTestMenuItem: { // Вызов модульного тестирования
-        RunModuleTests(); 
+        RunModuleTests();
         //Menu(); 
-        break; 
-    } 
+        break;
+    }
     case ExitMenuItem: { // Выход из программы
-        cout << "Программа завершена." << endl; 
-        exit(0); 
-    } 
+        cout << "Программа завершена." << endl;
+        exit(0);
+    }
     }
     //if (errorCode == NoError) { // Если при вводе исходных данных не произошло ошибок
     //    PrintText(text, searchSymbol);

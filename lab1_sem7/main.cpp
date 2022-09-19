@@ -6,11 +6,13 @@
 #include <iostream>
 #include "userInterface.h"
 #define NOMINMAX
+#include <cstdlib>
 #include <windows.h>
 
 using namespace std;
 
 int main() {
+    system("color F0");
     setlocale(LC_ALL, "RU");
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
