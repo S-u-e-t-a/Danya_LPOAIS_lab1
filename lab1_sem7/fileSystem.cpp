@@ -17,11 +17,28 @@ bool IsPathIncorrect(string path, int context) { // Проверка на использование не
     string basefilenameStr = path.substr(found + 1, base);
     const char* basefilenameChar = basefilenameStr.c_str();
     if (context == SaveContext) { // Если проверка проходит в режиме сохранения
-        ofstream file(path, ios::app); // ПОДХОДИТ ЕСЛИ НЕ БЫЛО ФАЙЛА. СОЗДАЁТ ФАЙЛ И is_regular_file НЕ ПИШЕТ ЧТО ЭТО ОШИБКА
-        if (!file) { // ПОСЛЕ remove ФАЙЛА И ДАЛЕЕ СНОВА СОЗДАЮ С ТАКИМ ИМЕНЕМ, НО ЕСЛИ ФАЙЛ БЫЛ, ТО ЗАТРЁТ ЕГО ДАННЫЕ.
-            file.close();
-            return true;
+        //ifstream file(path, ios::app); // ПОДХОДИТ ЕСЛИ НЕ БЫЛО ФАЙЛА. СОЗДАЁТ ФАЙЛ И is_regular_file НЕ ПИШЕТ ЧТО ЭТО ОШИБКА
+        //if (!file) { // ПОСЛЕ remove ФАЙЛА И ДАЛЕЕ СНОВА СОЗДАЮ С ТАКИМ ИМЕНЕМ, НО ЕСЛИ ФАЙЛ БЫЛ, ТО ЗАТРЁТ ЕГО ДАННЫЕ.
+        //    //file.close();
+        //    return true;
+        //}
+
+        if (!_strcmpi(basefilenameChar, "con")) return true;
+        if (exists(path)) {
+            if (!is_regular_file(path)) return true;
+            return false;
         }
+        else {
+            return false;
+        }
+
+        //if (FILE* file = fopen(path.c_str(), "r")) {
+        //    fclose(file);
+        //    return false;
+        //}
+        //else {
+        //    return true;
+        //}
     }
     if (!_strcmpi(basefilenameChar, "con")) return true;
     if (!is_regular_file(path)) return true;
@@ -105,10 +122,16 @@ void PrintResultInFile(const vector<string>& text, const vector<string>& wordsWi
     }
 }
 
-void PrintInitialDataInFile(const vector<string>& text, string& path) { // Функция для записи исходных данных в файл
+void PrintInitialDataInFile(const vector<string>& text, const string& searchSymbol, string& path) { // Функция для записи исходных данных в файл
     ofstream fout(path);
+    fout << searchSymbol << endl;
     for (int i = 0; i < text.size(); i++) {
-        fout << text[i] << endl;
+        if (i == text.size() - 1) {
+            fout << text[i];
+        }
+        else {
+            fout << text[i] << endl;
+        }
     }
 }
 
@@ -131,6 +154,23 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
                 text.push_back(temp);
         }
         fin.close();
+        if (text.empty() || searchSymbol == "") { // Проверка исходных данных в файле
+            cout << "В файле недостаточно данных." << endl;
+            system("pause");
+            int userChoice;
+            PrintErrorMenu();
+            MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
+            switch (userChoice) {
+            case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
+                FileInput(text, searchSymbol);
+                break;
+            }
+            case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
+                Menu();
+                break; }
+            }
+
+        }
         //return NoError;
     }
     else {
@@ -147,7 +187,7 @@ int SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSy
         //remove(path);
         fstream fout(path);
         //fout.close(); // хз зачем
-        /*while*/ if (fout) { // Если файл уже существует
+        /*while*/ if (exists(path)) { // Если файл уже существует
             PrintAdditionalMenu(); // Вывод вспомогательного меню
             MenuInputCheck(&userChoice, RewriteMenuItem, GoBackMenuItem);
             switch (userChoice) {
@@ -158,7 +198,7 @@ int SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSy
                     PrintResultInFile(text, wordsWithSearchSymbol, searchSymbol, path);
                     break; }
                 case SaveInitialDataContext: { // Сохранение исходных данных
-                    PrintInitialDataInFile(text, path);
+                    PrintInitialDataInFile(text, searchSymbol, path);
                     break; }
                 }
                 break;
@@ -173,17 +213,19 @@ int SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSy
             }
             //break;
         }
-        if (!fout) { // Если файла ещё не существует по данному пути
+        if (!exists(path)) { // Если файла ещё не существует по данному пути
             switch (context) {
             case SaveResultContext: { // Сохранение результатов
                 PrintResultInFile(text, wordsWithSearchSymbol, searchSymbol, path);
                 break; }
             case SaveInitialDataContext: { // Сохранение исходных данных
-                PrintInitialDataInFile(text, path);
+                PrintInitialDataInFile(text, searchSymbol, path);
                 break; }
             }
         }
         fout.close();
+        cout << "Данные успешно сохранены." << endl;
+        system("pause");
         return NoError;
     }
     else {

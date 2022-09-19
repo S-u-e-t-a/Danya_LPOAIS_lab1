@@ -128,7 +128,8 @@ void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchS
     }
     case No: { break; }
     }
-    cout << endl;
+    //cout << endl;
+    system("cls");
     PrintYesNoMenu("Сохранить исходные данные в файл?");
     MenuInputCheck(&userChoice, Yes, No);
     switch (userChoice) {

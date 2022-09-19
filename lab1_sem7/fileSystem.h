@@ -17,7 +17,7 @@ int PathInput(std::string& path, int context);
 
 void PrintResultInFile(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol, std::string& path);
 
-void PrintInitialDataInFile(const std::vector<std::string>& text, std::string& path);
+void PrintInitialDataInFile(const std::vector<std::string>& text, const std::string& searchSymbol, std::string& path);
 
 void FileInput(std::vector<std::string>& text, std::string& searchSymbol);
 
