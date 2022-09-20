@@ -77,8 +77,13 @@ void PrintText(const vector<string>& text, const string& searchSymbol) { // Выво
 void PrintResult(const vector<string>& wordsWithSearchSymbol) { // Вывод в консоль результата работы программы
     cout << "Результат поиска:" << endl;
     cout << endl;
-    for (int i = 0; i < wordsWithSearchSymbol.size(); i++) {
-        cout << wordsWithSearchSymbol[i] << endl;
+    if (!wordsWithSearchSymbol.empty()) {
+        for (int i = 0; i < wordsWithSearchSymbol.size(); i++) {
+            cout << wordsWithSearchSymbol[i] << endl;
+        }
+    }
+    else {
+        cout << "В тексте не найден искомый символ." << endl;
     }
     cout << endl;
 }
@@ -107,8 +112,7 @@ void ManualInput(vector<string>& text, string& searchSymbol) { // Ручной ввод ис
         }
     }
     cout << "Введите символ для поиска: ";
-    cin >> searchSymbol; // проверять на принадлежность к separators?
-    //return NoError;
+    cin >> searchSymbol;                                                        // ПРОВЕРЯТЬ?
 }
 
 void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol) { // Сохранение данных
@@ -122,13 +126,11 @@ void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchS
         if (errorCode == ErrorInFileFuncs) { // Если в ходе работы функции сохранения произошла ошибка, то функция прерывается // и возвращает код ошибки
             system("pause");
             Menu();
-            //return ErrorInFileFuncs;
         }
         break;
     }
     case No: { break; }
     }
-    //cout << endl;
     system("cls");
     PrintYesNoMenu("Сохранить исходные данные в файл?");
     MenuInputCheck(&userChoice, Yes, No);
@@ -138,18 +140,15 @@ void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchS
         if (errorCode == ErrorInFileFuncs) { // Если в ходе работы функции сохранения произошла ошибка, то функция прерывается // и возвращает код ошибки
             system("pause");
             Menu();
-            //return ErrorInFileFuncs;
         }
         break;
     }
     case No: { break; }
     }
-    //return NoError;
 }
 
 void Menu() { // Главное меню
     int userChoice;
-    //int errorCode = -1;
     vector<string> text;
     vector<string> wordsWithSearchSymbol;
     string searchSymbol;
@@ -158,8 +157,7 @@ void Menu() { // Главное меню
     cout << endl;
     switch (userChoice) {
     case ManualInputMenuItem: { // Ручной ввод исходных данных
-        /*errorCode = */ManualInput(text, searchSymbol);
-        //system("cls");
+        ManualInput(text, searchSymbol);
         SplitText(text, wordsWithSearchSymbol);
         FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
         PrintResult(wordsWithSearchSymbol);
@@ -167,7 +165,7 @@ void Menu() { // Главное меню
         break;
     }
     case InputFromFileMenuItem: { // Ввод исходных данных из файла
-        /*errorCode = */FileInput(text, searchSymbol);
+        FileInput(text, searchSymbol);
         PrintText(text, searchSymbol);
         SplitText(text, wordsWithSearchSymbol);
         FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
@@ -177,12 +175,10 @@ void Menu() { // Главное меню
     }
     case ShowInfoMenuItem: { // Вывод информации о программе и авторе
         Greeting();
-        //Menu(); 
         break;
     }
     case UnitTestMenuItem: { // Вызов модульного тестирования
         RunModuleTests();
-        //Menu(); 
         break;
     }
     case ExitMenuItem: { // Выход из программы
@@ -190,21 +186,5 @@ void Menu() { // Главное меню
         exit(0);
     }
     }
-    //if (errorCode == NoError) { // Если при вводе исходных данных не произошло ошибок
-    //    PrintText(text, searchSymbol);
-    //    SplitText(text, wordsWithSearchSymbol);
-    //    FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
-    //    PrintResult(wordsWithSearchSymbol);
-    //    /*errorCode = */SaveData(text, wordsWithSearchSymbol, searchSymbol); // ТУТ ЕЩЁ ПОТСЛЕЖИВАТЬ ПОВЕДЕНИЕ ПРОГИ 
-    //           
-    //    //if (errorCode == NoError) { // Если при сохранении данных не произошло ошибок
-    //    //    Menu();
-    //    //}
-    //    //else {
-    //    //    system("pause");
-    //    //    //errorCode = SaveData(text, wordsWithSearchSymbol, searchSymbol);            // МБ ЗАНОВО ВЫЗЫВАТЬ СОХРАНЕНИЕ
-    //    //}
-    //}
-    //system("pause");
 }
 

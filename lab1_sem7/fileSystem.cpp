@@ -17,12 +17,6 @@ bool IsPathIncorrect(string path, int context) { // Проверка на использование не
     string basefilenameStr = path.substr(found + 1, base);
     const char* basefilenameChar = basefilenameStr.c_str();
     if (context == SaveContext) { // Если проверка проходит в режиме сохранения
-        //ifstream file(path, ios::app); // ПОДХОДИТ ЕСЛИ НЕ БЫЛО ФАЙЛА. СОЗДАЁТ ФАЙЛ И is_regular_file НЕ ПИШЕТ ЧТО ЭТО ОШИБКА
-        //if (!file) { // ПОСЛЕ remove ФАЙЛА И ДАЛЕЕ СНОВА СОЗДАЮ С ТАКИМ ИМЕНЕМ, НО ЕСЛИ ФАЙЛ БЫЛ, ТО ЗАТРЁТ ЕГО ДАННЫЕ.
-        //    //file.close();
-        //    return true;
-        //}
-
         if (!_strcmpi(basefilenameChar, "con")) return true;
         if (exists(path)) {
             if (!is_regular_file(path)) return true;
@@ -31,14 +25,6 @@ bool IsPathIncorrect(string path, int context) { // Проверка на использование не
         else {
             return false;
         }
-
-        //if (FILE* file = fopen(path.c_str(), "r")) {
-        //    fclose(file);
-        //    return false;
-        //}
-        //else {
-        //    return true;
-        //}
     }
     if (!_strcmpi(basefilenameChar, "con")) return true;
     if (!is_regular_file(path)) return true;
@@ -65,9 +51,7 @@ int PathInput(string& path, int context) { // Ввод и проверка пути
     cin >> path;
     //getline(cin, path);
     //cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    ifstream fout(path); // для сохранения
     if (IsPathIncorrect(path, context) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
-        fout.close(); // для сохранения
         if (IsPathIncorrect(path, context)) { // Если путь некорректен
             cerr << "Некорректное указание пути или имени файла." << endl;
             system("pause");
@@ -80,16 +64,17 @@ int PathInput(string& path, int context) { // Ввод и проверка пути
         MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
         switch (userChoice) {
         case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
-            PathInput(path, context);
+            int errorCode = PathInput(path, context);
             break;
         }
         case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
-            //Menu();
-            return ErrorInPathInput; // ПОТЕСТИТЬ МБ НЕ НУЖЕН RETURN ЕСЛИ ВЫЗЫВАЮ МЕНЮ
+            return ErrorInPathInput;
             break; }
         }
     }
-    return NoError;
+    else {
+        return NoError;
+    }
 }
 
 void PrintAdditionalMenu() { // Вспомогательное меню, если в ходе сохранения файла был обнаружен уже существующий файл
@@ -114,11 +99,15 @@ void PrintResultInFile(const vector<string>& text, const vector<string>& wordsWi
     fout << endl;
     fout << "Символ поиска: " << searchSymbol << endl;
     fout << endl;
-    fout << "Слова, имеющие данный символ: " << endl;
+    fout << "Результат поиска:" << endl;
     fout << endl;
-    for (int i = 0; i < wordsWithSearchSymbol.size(); i++) {
-        fout << wordsWithSearchSymbol[i] << endl;
-        fout << endl;
+    if (!wordsWithSearchSymbol.empty()) {
+        for (int i = 0; i < wordsWithSearchSymbol.size(); i++) {
+            fout << wordsWithSearchSymbol[i] << endl;
+        }
+    }
+    else {
+        fout << "В тексте не найден искомый символ." << endl;
     }
 }
 
@@ -150,8 +139,10 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
                 fin >> searchSymbol;
                 count++;
             }
-            while (getline(fin, temp))
+            while (getline(fin, temp)) {
                 text.push_back(temp);
+            }
+                text.erase(text.begin());
         }
         fin.close();
         if (text.empty() || searchSymbol == "") { // Проверка исходных данных в файле
@@ -171,10 +162,8 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
             }
 
         }
-        //return NoError;
     }
     else {
-        //return ErrorInFileFuncs;
         Menu();
     }
 }
@@ -184,15 +173,12 @@ int SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSy
     string path;
     int errorCode = PathInput(path, SaveContext);
     if (errorCode == NoError) {
-        //remove(path);
         fstream fout(path);
-        //fout.close(); // хз зачем
-        /*while*/ if (exists(path)) { // Если файл уже существует
+        if (exists(path)) { // Если файл уже существует
             PrintAdditionalMenu(); // Вывод вспомогательного меню
             MenuInputCheck(&userChoice, RewriteMenuItem, GoBackMenuItem);
             switch (userChoice) {
             case RewriteMenuItem: { // Вариант с перезаписью
-                //ofstream fout(path);
                 switch (context) {
                 case SaveResultContext: { // Сохранение результатов
                     PrintResultInFile(text, wordsWithSearchSymbol, searchSymbol, path);
@@ -211,7 +197,6 @@ int SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSy
                 Menu();
                 break; }
             }
-            //break;
         }
         if (!exists(path)) { // Если файла ещё не существует по данному пути
             switch (context) {

@@ -27,8 +27,9 @@ bool ContainSeparators(const vector<char> separators, const string str) { // Про
 void SplitText(const vector<string>& text, vector<string>& wordsWithSearchSymbol) { // Разделение текста на отдельные слова
     string word = "";
     vector<string> tempVec;
-    const vector<char> separators = { ' ', '.', ',', '!', '?', '\t', '\n', '|', '\\', '@', '"', '#',
-      '$', '%', ':', '*', '(', ')', '[', ']', '-', '_', '+', '=', '{', '}', '/', ';', '<', '>', '^' };
+    //const vector<char> separators = { ' ', '.', ',', '!', '?', '\t', '\n', '|', '\\', '@', '"', '#',
+    //  '$', '%', ':', '*', '(', ')', '[', ']', '-', '_', '+', '=', '{', '}', '/', ';', '<', '>', '^' };
+    const vector<char> separators = { ' ', '\t', '\n' };
     for (int i = 0; i < text.size(); i++) {
         int j = 0;
         if (text[i].empty()) {
