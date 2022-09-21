@@ -1,7 +1,6 @@
 #include "fileSystem.h"
 #include "textFunctions.h"
 #include "userInterface.h"
-#include "tests.h"
 
 using namespace std;
 
@@ -38,7 +37,7 @@ void PrintMenu() { // Вывод меню
     cout << "\tГЛАВНОЕ МЕНЮ" << endl;
     cout << "Выберите вариант:" << endl;
     cout << "1. Ввести текст вручную." << endl;
-    cout << "2. Вывести текст из файла." << endl;
+    cout << "2. Ввести текст из файла." << endl;
     cout << "3. Вывести информацию о программе и авторе." << endl;
     cout << "4. Запустить модульное тестирование." << endl;
     cout << "5. Выйти из программы." << endl;
@@ -112,7 +111,7 @@ void ManualInput(vector<string>& text, string& searchSymbol) { // Ручной ввод ис
         }
     }
     cout << "Введите символ для поиска: ";
-    cin >> searchSymbol;                                                        // ПРОВЕРЯТЬ?
+    cin >> searchSymbol; 
 }
 
 void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol) { // Сохранение данных
@@ -123,7 +122,7 @@ void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchS
     switch (userChoice) {
     case Yes: {
         errorCode = SaveFile(text, wordsWithSearchSymbol, searchSymbol, SaveResultContext); // Вызов функции создания файла в режиме сохранения результата
-        if (errorCode == ErrorInFileFuncs) { // Если в ходе работы функции сохранения произошла ошибка, то функция прерывается // и возвращает код ошибки
+        if (errorCode == ErrorInFileFuncs) { // Если в ходе работы функции сохранения произошла ошибка, то функция прерывается
             system("pause");
             Menu();
         }
@@ -137,7 +136,7 @@ void SaveData(const vector<string>& text, const vector<string>& wordsWithSearchS
     switch (userChoice) {
     case Yes: {
         errorCode = SaveFile(text, wordsWithSearchSymbol, searchSymbol, SaveInitialDataContext); // Вызов функции создания файла в режиме сохранения исходных данных
-        if (errorCode == ErrorInFileFuncs) { // Если в ходе работы функции сохранения произошла ошибка, то функция прерывается // и возвращает код ошибки
+        if (errorCode == ErrorInFileFuncs) { // Если в ходе работы функции сохранения произошла ошибка, то функция прерывается
             system("pause");
             Menu();
         }
@@ -165,6 +164,13 @@ void Menu() { // Главное меню
         break;
     }
     case InputFromFileMenuItem: { // Ввод исходных данных из файла
+        system("cls");
+        cout << endl;
+        cout << "Внимание! В файле должно быть как минимум 2 строки." << endl;
+        cout << "Первая строка является искомым символом." << endl;
+        cout << "Последующие строки являются текстом." << endl;
+        cout << endl;
+        system("pause");
         FileInput(text, searchSymbol);
         PrintText(text, searchSymbol);
         SplitText(text, wordsWithSearchSymbol);
@@ -175,10 +181,6 @@ void Menu() { // Главное меню
     }
     case ShowInfoMenuItem: { // Вывод информации о программе и авторе
         Greeting();
-        break;
-    }
-    case UnitTestMenuItem: { // Вызов модульного тестирования
-        RunModuleTests();
         break;
     }
     case ExitMenuItem: { // Выход из программы

@@ -22,7 +22,7 @@ void ManualInput(std::vector<std::string>& text, std::string& searchSymbol);
 
 void SaveData(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol);
 
-enum Menu { ManualInputMenuItem = 1, InputFromFileMenuItem, ShowInfoMenuItem, UnitTestMenuItem, ExitMenuItem };
+enum Menu { ManualInputMenuItem = 1, InputFromFileMenuItem, ShowInfoMenuItem, ExitMenuItem };
 
 enum SaveAnswer { Yes = 1, No };
 

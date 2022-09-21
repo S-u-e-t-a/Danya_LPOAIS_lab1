@@ -9,25 +9,55 @@
 using namespace std::experimental::filesystem;
 using namespace std;
 
+//bool IsPathIncorrect(string path, int context) { // Проверка на использование недопустимых знаков и/или зарезервированных имён
+//    // Разбиение пути на части
+//    size_t found = path.find_last_of("\\");
+//    size_t point = path.find_last_of(".");
+//    size_t base = point - found - 1;
+//    string basefilenameStr = path.substr(found + 1, base);
+//    const char* basefilenameChar = basefilenameStr.c_str();
+//    if (context == SaveContext) { // Если проверка проходит в режиме сохранения
+//        if (!_strcmpi(basefilenameChar, "con")) return true;                        //  TODO: ПРОВЕРКА НА ЗАРЕЗЕРВИРОВАННЫЕ СЛОВА
+//        if (exists(path)) {
+//            if (!is_regular_file(path)) return true;
+//            return false;
+//        }
+//        else {
+//            return false;
+//        }
+//    }
+//    if (!_strcmpi(basefilenameChar, "con")) return true;
+//    if (!is_regular_file(path)) return true;
+//    return false;
+//}
+
 bool IsPathIncorrect(string path, int context) { // Проверка на использование недопустимых знаков и/или зарезервированных имён
-    // Разбиение пути на части
-    size_t found = path.find_last_of("\\");
-    size_t point = path.find_last_of(".");
-    size_t base = point - found - 1;
-    string basefilenameStr = path.substr(found + 1, base);
-    const char* basefilenameChar = basefilenameStr.c_str();
+    error_code ec;
     if (context == SaveContext) { // Если проверка проходит в режиме сохранения
-        if (!_strcmpi(basefilenameChar, "con")) return true;
-        if (exists(path)) {
-            if (!is_regular_file(path)) return true;
-            return false;
+        ofstream fout(path, ofstream::app);
+        if (!is_regular_file(path, ec)) {
+            return true;
         }
-        else {
-            return false;
+        if (!fout) {
+            fout.close();
+            return true;
         }
+        fout.close();
     }
-    if (!_strcmpi(basefilenameChar, "con")) return true;
-    if (!is_regular_file(path)) return true;
+    else { // Проверка в режиме открытия
+        if (!ifstream(path)) {
+            return true;
+        }
+        if (!is_regular_file(path, ec)) {
+            return true;
+        }
+        ifstream fin(path);
+        if (!fin) {
+            fin.close();
+            return true;
+        }
+        fin.close();
+    }
     return false;
 }
 
@@ -46,12 +76,13 @@ bool IsReadOnly(string path) { // Проверка файла на атрибут "только для чтения"
 
 int PathInput(string& path, int context) { // Ввод и проверка пути
     int userChoice;
-    system("cls");
-    cout << "Введите путь к файлу: ";
-    cin >> path;
+    //system("cls");
+    //cout << "Введите путь к файлу: ";
+    //cin >> path;
     //getline(cin, path);
     //cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    if (IsPathIncorrect(path, context) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
+
+    while (IsPathIncorrect(path, context) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
         if (IsPathIncorrect(path, context)) { // Если путь некорректен
             cerr << "Некорректное указание пути или имени файла." << endl;
             system("pause");
@@ -64,7 +95,8 @@ int PathInput(string& path, int context) { // Ввод и проверка пути
         MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
         switch (userChoice) {
         case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
-            int errorCode = PathInput(path, context);
+            //int errorCode = PathInput(path, context);                          //  TODO: УБРАТЬ РЕКУРСИЮ  TODO: ERRORCODE НЕ ИСПОЛЬЗОВАНА (УБРАТЬ?)
+            continue;
             break;
         }
         case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
@@ -72,9 +104,7 @@ int PathInput(string& path, int context) { // Ввод и проверка пути
             break; }
         }
     }
-    else {
-        return NoError;
-    }
+    return NoError;
 }
 
 void PrintAdditionalMenu() { // Вспомогательное меню, если в ходе сохранения файла был обнаружен уже существующий файл
@@ -90,7 +120,7 @@ void PrintAdditionalMenu() { // Вспомогательное меню, если в ходе сохранения фай
 }
 
 void PrintResultInFile(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol, string& path) { // Вспомогательная функция для записи результата в файл
-    ofstream fout(path);
+    ofstream fout(path, ofstream::trunc);
     fout << "Исходный текст: " << endl;
     fout << endl;
     for (int i = 0; i < text.size(); i++) {
@@ -112,7 +142,7 @@ void PrintResultInFile(const vector<string>& text, const vector<string>& wordsWi
 }
 
 void PrintInitialDataInFile(const vector<string>& text, const string& searchSymbol, string& path) { // Функция для записи исходных данных в файл
-    ofstream fout(path);
+    ofstream fout(path, ofstream::trunc);
     fout << searchSymbol << endl;
     for (int i = 0; i < text.size(); i++) {
         if (i == text.size() - 1) {
@@ -128,21 +158,24 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
     text.clear();
     string path = "";
     int errorCode = PathInput(path, InputContext);
-    if (errorCode == NoError) {
+    if (errorCode == NoError) { // TODO: СДЕЛАТЬ ЦИКЛ DO WHILE?
         ifstream fin(path);
         fin.seekg(0, ios::beg);
+
+        //  TODO: проверка содержимого
+
         string temp;
         int count = 0;
-        while (!fin.eof()) { // Чтение файла
+        while (!fin.eof()) { // Чтение файла   //  TODO: отдельная функция
             temp = "";
             if (count == 0) {
-                fin >> searchSymbol;
+                fin >> searchSymbol;            // TODO: ВМЕСТО FIN СДЕЛАТЬ READ
                 count++;
             }
             while (getline(fin, temp)) {
                 text.push_back(temp);
             }
-                text.erase(text.begin());
+            text.erase(text.begin());
         }
         fin.close();
         if (text.empty() || searchSymbol == "") { // Проверка исходных данных в файле
@@ -153,7 +186,7 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
             MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
             switch (userChoice) {
             case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
-                FileInput(text, searchSymbol);
+                FileInput(text, searchSymbol); //  TODO: УБРАТЬ РЕКУРСИЮ
                 break;
             }
             case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
@@ -168,18 +201,22 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
     }
 }
 
+// TODO: СДЕЛАТЬ ФУНКЦИЮ КОТОРАЯ ПРИНИМАЕТ ТОЛЬКО ТЕКСТ. И ДОП ФУНКЦИЮ ДЛЯ СОЗДАНИЯ ТЕКСТА
 int SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol, int context) { // Функция для создания файлов с результатами или исоходными данными
     int userChoice;
-    string path;
-    int errorCode = PathInput(path, SaveContext);
-    if (errorCode == NoError) {
-        fstream fout(path);
-        if (exists(path)) { // Если файл уже существует
+    string path = "";
+    int errorCode = NoError;
+    do {
+        system("cls");
+        cout << "Введите путь к файлу: ";
+        cin >> path;
+        if (ifstream(path)) {
             PrintAdditionalMenu(); // Вывод вспомогательного меню
             MenuInputCheck(&userChoice, RewriteMenuItem, GoBackMenuItem);
             switch (userChoice) {
             case RewriteMenuItem: { // Вариант с перезаписью
-                switch (context) {
+               //////////////
+                switch (context) { // TODO: УБРАТЬ СВИТЧ ТАК КАК СОХР ТЕКСТ ПРОСТО
                 case SaveResultContext: { // Сохранение результатов
                     PrintResultInFile(text, wordsWithSearchSymbol, searchSymbol, path);
                     break; }
@@ -188,18 +225,36 @@ int SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSy
                     break; }
                 }
                 break;
+                ////////////////
+
             }
             case CreateNewFileMenuItem: { // Вариант с созданием нового файла
-                SaveFile(text, wordsWithSearchSymbol, searchSymbol, context);
+                continue;
                 break;
             }
             case GoBackMenuItem: { // Выход в главное меню
                 Menu();
-                break; }
+                break;
+            }
             }
         }
-        if (!exists(path)) { // Если файла ещё не существует по данному пути
-            switch (context) {
+        else {
+            int errorCode = PathInput(path, SaveContext);
+            //ofstream fout(path, ofstream::app);
+            //error_code ec;
+            //if (!is_regular_file(path, ec)) {
+            //    cout << "Адрес содержит недопустимые значения. Повторите ввод." << endl;
+            //    continue;
+            //}
+            //if (!fout) {
+            //    cout << "Запись запрещена. Повторите ввод." << endl;
+            //    fout.close();
+            //    continue;
+            //}
+            //fout.close();
+            ////////////////////////////////////////////////////
+            //fout.open(path, ofstream::trunc);
+            switch (context) { // TODO: УБРАТЬ СВИТЧ ТАК КАК СОХР ТЕКСТ ПРОСТО
             case SaveResultContext: { // Сохранение результатов
                 PrintResultInFile(text, wordsWithSearchSymbol, searchSymbol, path);
                 break; }
@@ -208,12 +263,56 @@ int SaveFile(const vector<string>& text, const vector<string>& wordsWithSearchSy
                 break; }
             }
         }
-        fout.close();
+        //fout.close();
         cout << "Данные успешно сохранены." << endl;
         system("pause");
-        return NoError;
-    }
-    else {
-        return ErrorInFileFuncs;
-    }
+
+    } while (errorCode != NoError);
+    return errorCode; // TODO: МБ ЕСЛИ ИДУ В УНИВЕРСАЛЬНУЮ ФУНКЦИЮ СОХРАНЕНИЯ, ТО МОЖНО И В ИНТЕРФЕЙСЕ SAVEDATA ИЗМЕНИТЬ. SAVEFILE СДЕЛАТЬ VOID
+    //int errorCode = PathInput(path, SaveContext);
+    //if (errorCode == NoError) {
+    //    fstream fout(path);
+    //    if (exists(path)) { // Если файл уже существует
+    //        PrintAdditionalMenu(); // Вывод вспомогательного меню
+    //        MenuInputCheck(&userChoice, RewriteMenuItem, GoBackMenuItem);
+    //        switch (userChoice) {
+    //        case RewriteMenuItem: { // Вариант с перезаписью
+    //            switch (context) {
+    //            case SaveResultContext: { // Сохранение результатов
+    //                PrintResultInFile(text, wordsWithSearchSymbol, searchSymbol, path);
+    //                break; }
+    //            case SaveInitialDataContext: { // Сохранение исходных данных
+    //                PrintInitialDataInFile(text, searchSymbol, path);
+    //                break; }
+    //            }
+    //            break;
+    //        }
+    //        case CreateNewFileMenuItem: { // Вариант с созданием нового файла
+    //            SaveFile(text, wordsWithSearchSymbol, searchSymbol, context);
+    //            break;
+    //        }
+    //        case GoBackMenuItem: { // Выход в главное меню
+    //            Menu();
+    //            break; }
+    //        }
+    //    }
+
+    //    if (!exists(path)) { // Если файла ещё не существует по данному пути
+    //        switch (context) {
+    //        case SaveResultContext: { // Сохранение результатов
+    //            PrintResultInFile(text, wordsWithSearchSymbol, searchSymbol, path);
+    //            break; }
+    //        case SaveInitialDataContext: { // Сохранение исходных данных
+    //            PrintInitialDataInFile(text, searchSymbol, path);
+    //            break; }
+    //        }
+    //    }
+    //    fout.close();
+    //    cout << "Данные успешно сохранены." << endl;
+    //    system("pause");
+    //    return NoError;
+    //}
+    //else {
+    //    return ErrorInFileFuncs;
+    //}
 }
