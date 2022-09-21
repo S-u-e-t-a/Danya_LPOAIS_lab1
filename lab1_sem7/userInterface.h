@@ -8,7 +8,7 @@ void Greeting();
 
 void PrintMenu();
 
-void PrintYesNoMenu(const std::string msg);
+void PrintYesNoMenu(const std::string& msg);
 
 void PrintErrorMenu();
 
@@ -16,13 +16,17 @@ void PrintText(const std::vector<std::string>& text, const std::string& searchSy
 
 void PrintResult(const std::vector<std::string>& wordsWithSearchSymbol);
 
+void PrintWarning();
+
+void CreateText(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol, std::vector<std::string>& createdText, int context);
+
 void Menu();
 
 void ManualInput(std::vector<std::string>& text, std::string& searchSymbol);
 
-void SaveData(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol);
+void SaveData(const std::vector<std::string>& text);
 
-enum Menu { ManualInputMenuItem = 1, InputFromFileMenuItem, ShowInfoMenuItem, ExitMenuItem };
+enum Menu { NoMenuItem = 0, ManualInputMenuItem, InputFromFileMenuItem, ShowInfoMenuItem, ExitMenuItem };
 
 enum SaveAnswer { Yes = 1, No };
 

@@ -13,18 +13,16 @@ bool IsPathIncorrect(std::string path, int context);
 
 bool IsReadOnly(std::string filename);
 
-int PathInput(std::string& path, int context);
+int CheckPath(std::string& path, int context);
 
-void PrintResultInFile(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol, std::string& path);
-
-void PrintInitialDataInFile(const std::vector<std::string>& text, const std::string& searchSymbol, std::string& path);
+void PrintTextInFile(const std::vector<std::string>& text, std::string& path);
 
 void FileInput(std::vector<std::string>& text, std::string& searchSymbol);
 
-int SaveFile(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol, int saveContext);
+void SaveFile(const std::vector<std::string>& text);
 
 enum SavingMenuItems { RewriteMenuItem = 1, CreateNewFileMenuItem, GoBackMenuItem };
 
 enum ErrorMenuItems { EnterDataAgainMenuItem = 1, GoBackToMainMenuMenuItem };
 
-enum ErrorCodes { NoError, ErrorInPathInput, ErrorInFileFuncs };
+enum ErrorCodes { NoError, ErrorInPathInput };
