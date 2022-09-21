@@ -14,6 +14,8 @@ using namespace std;
 int main() {
     system("color F0");
     setlocale(LC_ALL, "RU");
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
     Greeting();
     while (true) {
         Menu();

@@ -20,11 +20,9 @@ void PrintWarning();
 
 void CreateText(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol, std::vector<std::string>& createdText, int context);
 
-void Menu();
-
 void ManualInput(std::vector<std::string>& text, std::string& searchSymbol);
 
-void SaveData(const std::vector<std::string>& text);
+void Menu();
 
 enum Menu { NoMenuItem = 0, ManualInputMenuItem, InputFromFileMenuItem, ShowInfoMenuItem, ExitMenuItem };
 

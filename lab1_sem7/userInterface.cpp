@@ -157,7 +157,7 @@ void ManualInput(vector<string>& text, string& searchSymbol) { // Ручной ввод ис
     while (true) {
         getline(cin, searchSymbol);
         if (searchSymbol == "" || searchSymbol == "\t" || searchSymbol == "\n") { // Проверка ввода
-            cout << "Вы не ввели текст." << endl;
+            cout << "Вы не ввели символ для поиска." << endl;
             cout << "Введите текст." << endl;
             cout << endl;
         }

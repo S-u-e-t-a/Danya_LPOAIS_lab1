@@ -17,6 +17,8 @@ int CheckPath(std::string& path, int context);
 
 void PrintTextInFile(const std::vector<std::string>& text, std::string& path);
 
+void ReadFromFile(std::vector<std::string>& text, std::string& searchSymbol, const std::string& path);
+
 void FileInput(std::vector<std::string>& text, std::string& searchSymbol);
 
 void SaveFile(const std::vector<std::string>& text);

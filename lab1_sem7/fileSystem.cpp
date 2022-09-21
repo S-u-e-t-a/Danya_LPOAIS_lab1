@@ -9,6 +9,18 @@
 using namespace std::experimental::filesystem;
 using namespace std;
 
+void PrintAdditionalMenu() { // Вспомогательное меню, если в ходе сохранения файла был обнаружен уже существующий файл
+    system("cls");
+    cout << "Данный файл уже существует." << endl;
+    cout << endl;
+    cout << "\tЧто вы хотите сделать?" << endl;
+    cout << "1. Перезаписать файл." << endl;
+    cout << "2. Создать новый файл." << endl;
+    cout << "3. Вернуться в главное меню." << endl;
+    cout << endl;
+    cout << "Выберите пункт меню: ";
+}
+
 bool IsPathIncorrect(string path, int context) { // Проверка на использование недопустимых знаков и/или зарезервированных имён
     error_code ec;
     if (context == SaveContext) { // Если проверка проходит в режиме сохранения
@@ -78,19 +90,7 @@ int CheckPath(string& path, int context) { // Ввод и проверка пути
     return NoError;
 }
 
-void PrintAdditionalMenu() { // Вспомогательное меню, если в ходе сохранения файла был обнаружен уже существующий файл
-    system("cls");
-    cout << "Данный файл уже существует." << endl;
-    cout << endl;
-    cout << "\tЧто вы хотите сделать?" << endl;
-    cout << "1. Перезаписать файл." << endl;
-    cout << "2. Создать новый файл." << endl;
-    cout << "3. Вернуться в главное меню." << endl;
-    cout << endl;
-    cout << "Выберите пункт меню: ";
-}
-
-void PrintTextInFile(const vector<string>& text, string& path) {
+void PrintTextInFile(const vector<string>& text, string& path) { // 
     ofstream fout(path, ofstream::trunc, ofstream::app);
     for (int i = 0; i < text.size(); i++) {
         if (i == text.size() - 1) {
@@ -100,7 +100,7 @@ void PrintTextInFile(const vector<string>& text, string& path) {
     }
 }
 
-void readFromFile(vector<string>& text, string& searchSymbol) {
+void ReadFromFile(vector<string>& text, string& searchSymbol, const string& path) { // Чтение данных из файла
     ifstream fin(path);
     fin.seekg(0, ios::beg);
     string temp;
@@ -115,7 +115,7 @@ void readFromFile(vector<string>& text, string& searchSymbol) {
     fin.close();
 }
 
-void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтения данных из файла
+void FileInput(vector<string>& text, string& searchSymbol) { // Чтение данных из файла и их проверка
     text.clear();
     int userChoice;
     string path = "";
@@ -126,11 +126,10 @@ void FileInput(vector<string>& text, string& searchSymbol) { // Функция для чтен
         cin >> path;
         errorCode = CheckPath(path, InputContext);
         if (errorCode == NoError) {
-            readFromFile(text, searchSymbol);
+            ReadFromFile(text, searchSymbol, path);
             if (text.empty() || searchSymbol == "") { // Проверка исходных данных в файле
                 cout << "В файле недостаточно данных." << endl;
                 system("pause");
-                int userChoice;
                 PrintErrorMenu();
                 MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
                 switch (userChoice) {
