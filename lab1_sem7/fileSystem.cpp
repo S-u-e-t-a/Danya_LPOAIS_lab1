@@ -21,7 +21,7 @@ void PrintAdditionalMenu() { // Вспомогательное меню, если в ходе сохранения фай
     cout << "Выберите пункт меню: ";
 }
 
-bool IsPathIncorrect(const string path, const int context) { // Проверка на использование недопустимых знаков и/или зарезервированных имён
+bool IsPathIncorrect(const string& path, const int context) { // Проверка на использование недопустимых знаков и/или зарезервированных имён
     error_code ec;
     if (context == SaveContext) { // Если проверка проходит в режиме сохранения
         if (ifstream(path)) {
@@ -58,7 +58,7 @@ bool IsPathIncorrect(const string path, const int context) { // Проверка на испо
     return false;
 }
 
-bool IsReadOnly(const string path) { // Проверка файла на атрибут "только для чтения"
+bool IsReadOnly(const string& path) { // Проверка файла на атрибут "только для чтения"
     WIN32_FIND_DATAA findData;
     LPCSTR name = path.c_str();
     FindFirstFileA(name, &findData);
@@ -71,7 +71,7 @@ bool IsReadOnly(const string path) { // Проверка файла на атрибут "только для чт
     }
 }
 
-int CheckPath(const string& path, const int context) { // Ввод и проверка пути
+int CheckPath(const string& path, const int context) { // Проверка пути к файлу
     int userChoice;
     if (IsPathIncorrect(path, context) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
         if (IsPathIncorrect(path, context)) { // Если путь некорректен
@@ -98,7 +98,7 @@ int CheckPath(const string& path, const int context) { // Ввод и проверка пути
     return NoError;
 }
 
-int CheckData(const vector<string>& text, const string& searchSymbol) {
+int CheckData(const vector<string>& text, const string& searchSymbol) { // Проверка данных, хранящихся в файле
     int userChoice;
     if (text.empty() || searchSymbol == "") { // Проверка исходных данных в файле
         cerr << "В файле недостаточно данных." << endl;
@@ -119,7 +119,7 @@ int CheckData(const vector<string>& text, const string& searchSymbol) {
     return NoError;
 }
 
-void PrintTextInFile(const vector<string>& text, const string& path) { // 
+void PrintTextInFile(const vector<string>& text, const string& path) { // Запись данных в файл
     ofstream fout(path, ofstream::trunc);
     for (int i = 0; i < text.size(); i++) {
         if (i == text.size() - 1) {

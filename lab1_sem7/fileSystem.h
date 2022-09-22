@@ -9,9 +9,9 @@
 
 void PrintAdditionalMenu();
 
-bool IsPathIncorrect(const std::string path, const int context);
+bool IsPathIncorrect(const std::string& path, const int context);
 
-bool IsReadOnly(const std::string filename);
+bool IsReadOnly(const std::string& path);
 
 int CheckPath(const std::string& path, const int context);
 

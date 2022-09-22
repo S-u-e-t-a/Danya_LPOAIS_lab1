@@ -85,7 +85,7 @@ void PrintResult(const vector<string>& wordsWithSearchSymbol) { // Вывод в консо
     cout << endl;
 }
 
-void PrintWarning() {
+void PrintWarning() { // Вывод в консоль сообщения о данных, которые должны находиться в файле с исходными данными
     system("cls");
     cout << endl;
     cout << "Внимание! В файле должно быть как минимум 2 строки." << endl;
@@ -95,7 +95,7 @@ void PrintWarning() {
     system("pause");
 }
 
-void CreateText(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol, vector<string>& createdText, int context) {
+void CreateText(const vector<string>& text, const vector<string>& wordsWithSearchSymbol, string& searchSymbol, vector<string>& createdText, int context) { // Создание текста для сохранения в файл
     createdText.clear();
     switch (context) {
     case SaveResultContext: {
