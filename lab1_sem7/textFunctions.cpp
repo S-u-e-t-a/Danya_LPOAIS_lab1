@@ -57,8 +57,8 @@ void FindSymbolInText(vector<string>& wordsWithSearchSymbol, string searchSymbol
     vector<string> tempVec;
     for (int i = 0; i < wordsWithSearchSymbol.size(); i++) {
         string word = wordsWithSearchSymbol[i];
-        transform(word.begin(), word.end(), word.begin(), ::tolower); // Приведение слова к строчному регистру
-        transform(searchSymbol.begin(), searchSymbol.end(), searchSymbol.begin(), ::tolower); // Приведение искомого символа к строчному регистру
+        transform(word.begin(), word.end(), word.begin(), [](int c) -> char { return static_cast<char>(::tolower(c)); }); // Приведение слова к строчному регистру
+        transform(searchSymbol.begin(), searchSymbol.end(), searchSymbol.begin(), [](int a) -> char { return static_cast<char>(::tolower(a)); }); // Приведение искомого символа к строчному регистру
         if (word.find(searchSymbol) != string::npos) { // Если в слове найден искомый символ
             tempVec.push_back(wordsWithSearchSymbol[i]);
         }

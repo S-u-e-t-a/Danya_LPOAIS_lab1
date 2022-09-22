@@ -87,7 +87,6 @@ void PrintResult(const vector<string>& wordsWithSearchSymbol) { // Вывод в консо
 
 void PrintWarning() { // Вывод в консоль сообщения о данных, которые должны находиться в файле с исходными данными
     system("cls");
-    cout << endl;
     cout << "Внимание! В файле должно быть как минимум 2 строки." << endl;
     cout << "Первая строка является искомым символом." << endl;
     cout << "Последующие строки являются текстом." << endl;
@@ -131,7 +130,6 @@ void CreateText(const vector<string>& text, const vector<string>& wordsWithSearc
 
 int TextInput(vector<string>& text) { // Ручной ввод текста и его проверка
     int userChoice;
-    int errorCode = ErrorInTextInput;
     string temp;
     while (true) {
         cin.ignore();
@@ -165,7 +163,6 @@ int TextInput(vector<string>& text) { // Ручной ввод текста и его проверка
 
 int SymbolInput(string& searchSymbol) { // Ручной ввод искомого символа и его проверка
     int userChoice;
-    int errorCode = NoError;
     cin.ignore();
     getline(cin, searchSymbol);
     if (searchSymbol == "" || searchSymbol == "\t" || searchSymbol == "\n") {
@@ -188,7 +185,6 @@ int SymbolInput(string& searchSymbol) { // Ручной ввод искомого символа и его пр
 }
 
 int ManualInput(vector<string>& text, string& searchSymbol) { // Ручной ввод исходных данных
-    int userChoice;
     int errorCode = NoError;
     string temp;
     do {
@@ -207,7 +203,6 @@ int ManualInput(vector<string>& text, string& searchSymbol) { // Ручной ввод исх
             break;
         }
         }
-
         cout << "Введите символ для поиска: ";
         errorCode = SymbolInput(searchSymbol);
         cout << endl;

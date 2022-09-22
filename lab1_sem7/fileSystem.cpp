@@ -100,7 +100,7 @@ int CheckPath(const string& path, const int context) { // Проверка пути к файлу
 
 int CheckData(const vector<string>& text, const string& searchSymbol) { // Проверка данных, хранящихся в файле
     int userChoice;
-    if (text.empty() || searchSymbol == "") { // Проверка исходных данных в файле
+    if (text.empty() || searchSymbol == "" || searchSymbol == "\t" || searchSymbol == "\n") { // Проверка исходных данных в файле
         cerr << "В файле недостаточно данных." << endl;
         system("pause");
         PrintErrorMenu();
@@ -141,8 +141,10 @@ void ReadFromFile(vector<string>& text, string& searchSymbol, const string& path
             text.push_back(temp);
         }
     }
-    searchSymbol = text[0];
-    text.erase(text.begin());
+    if (text.size() != 0) {
+        searchSymbol = text[0];
+        text.erase(text.begin());
+    }
     fin.close();
 }
 
