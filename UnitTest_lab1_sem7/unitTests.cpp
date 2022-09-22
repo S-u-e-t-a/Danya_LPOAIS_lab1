@@ -3,28 +3,6 @@
 #include "../lab1_sem7/textFunctions.h"
 #include "../lab1_sem7/textFunctions.cpp"
 
-//namespace Microsoft {
-//  namespace VisualStudio {
-//    namespace CppUnitTestFramework {
-//      template <> static std::wstring ToString(const std::vector<std::string>& vec) {
-//        std::wstringstream s;
-//        for (int i = 0; i != vec.size(); i++) {
-//          for (int j = 0; j != vec[i].size(); j++) {
-//            s << vec[i][j];
-//          }
-//          s << " ";
-//        }
-//        return s.str();
-//      }
-//      //template <> static std::wstring ToString(const pair<double, double>& q) {
-//      //  wstringstream s;
-//      //  s << q.first << ' ' << q.second << ' ';
-//      //  return s.str();
-//      //}
-//    }
-//  }
-//}
-
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
