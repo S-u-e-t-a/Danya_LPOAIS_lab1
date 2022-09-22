@@ -20,7 +20,11 @@ void PrintWarning();
 
 void CreateText(const std::vector<std::string>& text, const std::vector<std::string>& wordsWithSearchSymbol, std::string& searchSymbol, std::vector<std::string>& createdText, int context);
 
-void ManualInput(std::vector<std::string>& text, std::string& searchSymbol);
+int TextInput(std::vector<std::string>& text);
+
+int SymbolInput(std::string& searchSymbol);
+
+int ManualInput(std::vector<std::string>& text, std::string& searchSymbol);
 
 void Menu();
 

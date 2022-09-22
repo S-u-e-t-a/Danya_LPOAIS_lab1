@@ -21,10 +21,16 @@ void PrintAdditionalMenu() { // Вспомогательное меню, если в ходе сохранения фай
     cout << "Выберите пункт меню: ";
 }
 
-bool IsPathIncorrect(string path, int context) { // Проверка на использование недопустимых знаков и/или зарезервированных имён
+bool IsPathIncorrect(const string path, const int context) { // Проверка на использование недопустимых знаков и/или зарезервированных имён
     error_code ec;
     if (context == SaveContext) { // Если проверка проходит в режиме сохранения
-        ofstream fout(path, ofstream::app, ofstream::_Noreplace);
+        if (ifstream(path)) {
+            if (!is_regular_file(path, ec)) {
+                return true;
+            }
+            return false;
+        }
+        ofstream fout(path, ofstream::_Noreplace);
         if (!is_regular_file(path, ec)) {
             return true;
         }
@@ -33,8 +39,9 @@ bool IsPathIncorrect(string path, int context) { // Проверка на использование не
             return true;
         }
         fout.close();
+        remove(path);
     }
-    else { // Проверка в режиме открытия
+    else { // Если проверка проходит в режиме открытия
         if (!ifstream(path)) {
             return true;
         }
@@ -51,7 +58,7 @@ bool IsPathIncorrect(string path, int context) { // Проверка на использование не
     return false;
 }
 
-bool IsReadOnly(string path) { // Проверка файла на атрибут "только для чтения"
+bool IsReadOnly(const string path) { // Проверка файла на атрибут "только для чтения"
     WIN32_FIND_DATAA findData;
     LPCSTR name = path.c_str();
     FindFirstFileA(name, &findData);
@@ -64,9 +71,9 @@ bool IsReadOnly(string path) { // Проверка файла на атрибут "только для чтения"
     }
 }
 
-int CheckPath(string& path, int context) { // Ввод и проверка пути
+int CheckPath(const string& path, const int context) { // Ввод и проверка пути
     int userChoice;
-    while (IsPathIncorrect(path, context) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
+    if (IsPathIncorrect(path, context) || IsReadOnly(path)) { // Проверка на корректный путь и имя файла
         if (IsPathIncorrect(path, context)) { // Если путь некорректен
             cerr << "Некорректное указание пути или имени файла." << endl;
             system("pause");
@@ -79,24 +86,48 @@ int CheckPath(string& path, int context) { // Ввод и проверка пути
         MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
         switch (userChoice) {
         case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
-            continue;
+            return ErrorInPathInput;
             break;
         }
         case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
-            return ErrorInPathInput;
-            break; }
+            return GoBack;
+            break; 
+        }
         }
     }
     return NoError;
 }
 
-void PrintTextInFile(const vector<string>& text, string& path) { // 
-    ofstream fout(path, ofstream::trunc, ofstream::app);
+int CheckData(const vector<string>& text, const string& searchSymbol) {
+    int userChoice;
+    if (text.empty() || searchSymbol == "") { // Проверка исходных данных в файле
+        cerr << "В файле недостаточно данных." << endl;
+        system("pause");
+        PrintErrorMenu();
+        MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
+        switch (userChoice) {
+        case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
+            return ErrorInFileData;
+            break;
+        }
+        case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
+            return GoBack;
+            break; 
+        }
+        }
+    }
+    return NoError;
+}
+
+void PrintTextInFile(const vector<string>& text, const string& path) { // 
+    ofstream fout(path, ofstream::trunc);
     for (int i = 0; i < text.size(); i++) {
         if (i == text.size() - 1) {
             fout << text[i];
         }
-        fout << text[i] << endl;
+        else {
+            fout << text[i] << endl;
+        }
     }
 }
 
@@ -115,68 +146,92 @@ void ReadFromFile(vector<string>& text, string& searchSymbol, const string& path
     fin.close();
 }
 
-void FileInput(vector<string>& text, string& searchSymbol) { // Чтение данных из файла и их проверка
+int FileInput(vector<string>& text, string& searchSymbol) { // Чтение данных из файла и их проверка
     text.clear();
-    int userChoice;
     string path = "";
     int errorCode = ErrorInPathInput;
     do {
         system("cls");
         cout << "Введите путь к файлу: ";
-        cin >> path;
+        cin.ignore();
+        getline(cin, path);
         errorCode = CheckPath(path, InputContext);
-        if (errorCode == NoError) {
+        switch (errorCode) {
+        case NoError: {
             ReadFromFile(text, searchSymbol, path);
-            if (text.empty() || searchSymbol == "") { // Проверка исходных данных в файле
-                cout << "В файле недостаточно данных." << endl;
-                system("pause");
-                PrintErrorMenu();
-                MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
-                switch (userChoice) {
-                case EnterDataAgainMenuItem: { // Вариант с вводом пути заново
-                    continue;
-                    break;
-                }
-                case GoBackToMainMenuMenuItem: { // Вариант выйти в главное меню
-                    Menu();
-                    break; }
-                }
+            errorCode = CheckData(text, searchSymbol);
+            switch (errorCode) {
+            case ErrorInFileData: {
+                continue;
+                break;
             }
+            case GoBack: {
+                return GoBack;
+                break;
+            }
+            }
+            break;
+        }
+        case ErrorInPathInput: {
+            continue;
+            break;
+        }
+        case GoBack: {
+            return GoBack;
+            break;
+        }
         }
     } while (errorCode != NoError);
+    return NoError;
 }
 
-void SaveFile(const vector<string>& text) { // Функция для создания файлов с результатами или исоходными данными
+int SaveFile(const vector<string>& text) { // Функция для создания файлов с результатами или исоходными данными
     int userChoice;
     string path = "";
     int errorCode = ErrorInPathInput;
     do {
         system("cls");
         cout << "Введите путь к файлу: ";
-        cin >> path;
+        cin.ignore();
+        getline(cin, path);
+        errorCode = CheckPath(path, SaveContext);
+        switch (errorCode) {
+        case ErrorInPathInput: {
+            continue;
+            break;
+        }
+        case GoBack: {
+            return GoBack;
+            break;
+        }
+        }
+
         if (ifstream(path)) { // Если файл существует
             PrintAdditionalMenu(); // Вывод вспомогательного меню
             MenuInputCheck(&userChoice, RewriteMenuItem, GoBackMenuItem);
             switch (userChoice) {
             case RewriteMenuItem: { // Вариант с перезаписью
                 PrintTextInFile(text, path);
+                break;
             }
             case CreateNewFileMenuItem: { // Вариант с созданием нового файла
+                errorCode = ErrorInPathInput;
                 continue;
                 break;
             }
             case GoBackMenuItem: { // Выход в главное меню
-                Menu();
+                return GoBack;
                 break;
             }
             }
         }
         else { // Если файл не существует
-            errorCode = CheckPath(path, SaveContext);
+            //errorCode = CheckPath(path, SaveContext);
             PrintTextInFile(text, path);
         }
-        //fout.close();
+        cout << endl;
         cout << "Данные успешно сохранены." << endl;
         system("pause");
     } while (errorCode != NoError);
+    return NoError;
 }

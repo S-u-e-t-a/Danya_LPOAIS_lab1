@@ -5,14 +5,13 @@
 using namespace std;
 
 void MenuInputCheck(int* userChoice, const int min, const int max) { // Проверка ручного ввода. Позволяет вводить только числа
-    if (cin.fail() || !(cin >> *userChoice).good() || *userChoice < min || *userChoice > max) { // Если ввод пользователя не является цифрой или находится вне заданных границ
+    while (cin.fail() || !(cin >> *userChoice).good() || *userChoice < min || *userChoice > max) { // Если ввод пользователя не является цифрой или находится вне заданных границ
         cin.clear();
         cout << endl;
         cerr << "Введено неправильное значение.";
         cout << endl;
         cout << "Введите значение: ";
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        MenuInputCheck(userChoice, min, max);
     }
 }
 
@@ -130,100 +129,170 @@ void CreateText(const vector<string>& text, const vector<string>& wordsWithSearc
     }
 }
 
-void ManualInput(vector<string>& text, string& searchSymbol) { // Ручной ввод исходных данных
-    string buffer;
-    system("cls");
-    cout << "Введите текст." << endl;
-    cout << "По окончании ввода введите пустую строку." << endl;
-    cout << endl;
-    getline(cin, buffer);
+int TextInput(vector<string>& text) { // Ручной ввод текста и его проверка
+    int userChoice;
+    int errorCode = ErrorInTextInput;
+    string temp;
     while (true) {
-        getline(cin, buffer);
-        if (buffer != "") { // Проверка ввода
-            text.push_back(buffer);
+        cin.ignore();
+        getline(cin, temp);
+        if (temp != "") {
+            text.push_back(temp);
         }
         else {
             if (text.size() == 0) {
-                cout << "Вы не ввели текст." << endl;
-                cout << "Введите текст." << endl;
-                cout << endl;
+                cerr << "Вы не ввели текст." << endl;
+                system("pause");
+                PrintErrorMenu();
+                MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
+                switch (userChoice) {
+                case EnterDataAgainMenuItem: {
+                    return ErrorInTextInput;
+                    break;
+                }
+                case GoBackToMainMenuMenuItem: {
+                    return GoBack;
+                    break;
+                }
+                }
             }
             else {
-                break;
+                return NoError;
             }
-        }
-    }
-    cout << "Введите символ для поиска: ";
-    while (true) {
-        getline(cin, searchSymbol);
-        if (searchSymbol == "" || searchSymbol == "\t" || searchSymbol == "\n") { // Проверка ввода
-            cout << "Вы не ввели символ для поиска." << endl;
-            cout << "Введите текст." << endl;
-            cout << endl;
-        }
-        else {
-            break;
         }
     }
 }
 
+int SymbolInput(string& searchSymbol) { // Ручной ввод искомого символа и его проверка
+    int userChoice;
+    int errorCode = NoError;
+    cin.ignore();
+    getline(cin, searchSymbol);
+    if (searchSymbol == "" || searchSymbol == "\t" || searchSymbol == "\n") {
+        cerr << "Вы не ввели символ для поиска." << endl;
+        system("pause");
+        PrintErrorMenu();
+        MenuInputCheck(&userChoice, EnterDataAgainMenuItem, GoBackToMainMenuMenuItem);
+        switch (userChoice) {
+        case EnterDataAgainMenuItem: {
+            return ErrorInSymbolInput;
+            break;
+        }
+        case GoBackToMainMenuMenuItem: {
+            return GoBack;
+            break;
+        }
+        }
+    }
+    return NoError;
+}
+
+int ManualInput(vector<string>& text, string& searchSymbol) { // Ручной ввод исходных данных
+    int userChoice;
+    int errorCode = NoError;
+    string temp;
+    do {
+        system("cls");
+        cout << "Введите текст." << endl;
+        cout << "По окончании ввода введите пустую строку." << endl;
+        cout << endl;
+        errorCode = TextInput(text);
+        switch (errorCode) {
+        case ErrorInTextInput: {
+            continue;
+            break;
+        }
+        case GoBack: {
+            return GoBack;
+            break;
+        }
+        }
+
+        cout << "Введите символ для поиска: ";
+        errorCode = SymbolInput(searchSymbol);
+        cout << endl;
+        switch (errorCode) {
+        case ErrorInSymbolInput: {
+            continue;
+            break;
+        }
+        case GoBack: {
+            return GoBack;
+            break;
+        }
+        }
+
+    } while (errorCode != NoError);
+    return NoError;
+}
+
 void Menu() { // Главное меню
     int userChoice;
-    int lastChoiceInMainMenu = NoMenuItem;
+    int errorCode = GoBack;
     vector<string> text;
     vector<string> wordsWithSearchSymbol;
     string searchSymbol;
     vector<string> createdText;
-    PrintMenu();
-    MenuInputCheck(&userChoice, ManualInputMenuItem, ExitMenuItem);
-    cout << endl;
-    switch (userChoice) {
-    case ManualInputMenuItem: { // Ручной ввод исходных данных
-        lastChoiceInMainMenu = ManualInputMenuItem;
-        ManualInput(text, searchSymbol);
-        break;
-    }
-    case InputFromFileMenuItem: { // Ввод исходных данных из файла
-        lastChoiceInMainMenu = InputFromFileMenuItem;
-        PrintWarning();
-        FileInput(text, searchSymbol);
-        PrintText(text, searchSymbol);
-        break;
-    }
-    case ShowInfoMenuItem: { // Вывод информации о программе и авторе
-        lastChoiceInMainMenu = ShowInfoMenuItem;
-        Greeting();
-        break;
-    }
-    case ExitMenuItem: { // Выход из программы
-        lastChoiceInMainMenu = ExitMenuItem;
-        cout << "Программа завершена." << endl;
-        exit(0);
-    }
-    }
-    if (lastChoiceInMainMenu == ManualInputMenuItem || lastChoiceInMainMenu == InputFromFileMenuItem) {
-        SplitText(text, wordsWithSearchSymbol);
-        FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
-        PrintResult(wordsWithSearchSymbol);
-        PrintYesNoMenu("Сохранить результат в файл?");
-        MenuInputCheck(&userChoice, Yes, No);
+    do {
+        PrintMenu();
+        MenuInputCheck(&userChoice, ManualInputMenuItem, ExitMenuItem);
+        cout << endl;
         switch (userChoice) {
-        case Yes: {
-            CreateText(text, wordsWithSearchSymbol, searchSymbol, createdText, SaveResultContext);
-            SaveFile(createdText);
+        case ManualInputMenuItem: { // Ручной ввод исходных данных
+            errorCode = ManualInput(text, searchSymbol);
+            if (errorCode == GoBack) {
+                continue;
+            }
             break;
         }
-        case No: { break; }
-        }
-        PrintYesNoMenu("Сохранить исходные данные в файл?");
-        MenuInputCheck(&userChoice, Yes, No);
-        switch (userChoice) {
-        case Yes: {
-            CreateText(text, wordsWithSearchSymbol, searchSymbol, createdText, SaveResultContext);
-            SaveFile(createdText);
+        case InputFromFileMenuItem: { // Ввод исходных данных из файла
+            PrintWarning();
+            errorCode = FileInput(text, searchSymbol);
+            if (errorCode == GoBack) {
+                continue;
+            }
+            PrintText(text, searchSymbol);
             break;
         }
-        case No: { break; }
+        case ShowInfoMenuItem: { // Вывод информации о программе и авторе
+            Greeting();
+            break;
         }
-    }
+        case ExitMenuItem: { // Выход из программы
+            cout << "Программа завершена." << endl;
+            exit(0);
+        }
+        }
+        if (userChoice == ManualInputMenuItem || userChoice == InputFromFileMenuItem) {
+            SplitText(text, wordsWithSearchSymbol);
+            FindSymbolInText(wordsWithSearchSymbol, searchSymbol);
+            PrintResult(wordsWithSearchSymbol);
+            PrintYesNoMenu("Сохранить результат в файл?");
+            MenuInputCheck(&userChoice, Yes, No);
+            switch (userChoice) {
+            case Yes: {
+                CreateText(text, wordsWithSearchSymbol, searchSymbol, createdText, SaveResultContext);
+                errorCode = SaveFile(createdText);
+                if (errorCode == GoBack) {
+                    continue;
+                }
+                break;
+            }
+            case No: { break; }
+            }
+            system("cls");
+            createdText.clear();
+            PrintYesNoMenu("Сохранить исходные данные в файл?");
+            MenuInputCheck(&userChoice, Yes, No);
+            switch (userChoice) {
+            case Yes: {
+                CreateText(text, wordsWithSearchSymbol, searchSymbol, createdText, SaveInitialDataContext);
+                errorCode = SaveFile(createdText);
+
+                break;
+            }
+            case No: { break; }
+            }
+        }
+    } while (errorCode != NoError);
 }
