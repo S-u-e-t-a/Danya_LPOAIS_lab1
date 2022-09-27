@@ -131,11 +131,13 @@ void CreateText(const vector<string>& text, const vector<string>& wordsWithSearc
 int TextInput(vector<string>& text) { // Ручной ввод текста и его проверка
     int userChoice;
     string temp;
+    text.clear();
+    cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
     while (true) {
-        cin.ignore();
         getline(cin, temp);
         if (temp != "") {
             text.push_back(temp);
+            cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
         }
         else {
             if (text.size() == 0) {
@@ -163,7 +165,7 @@ int TextInput(vector<string>& text) { // Ручной ввод текста и его проверка
 
 int SymbolInput(string& searchSymbol) { // Ручной ввод искомого символа и его проверка
     int userChoice;
-    cin.ignore();
+    searchSymbol = "";
     getline(cin, searchSymbol);
     if (searchSymbol == "" || searchSymbol == "\t" || searchSymbol == "\n") {
         cerr << "Вы не ввели символ для поиска." << endl;
